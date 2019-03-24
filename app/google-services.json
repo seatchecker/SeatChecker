@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "311695106243",
+    "firebase_url": "https://myseat9.firebaseio.com",
+    "project_id": "myseat9",
+    "storage_bucket": "myseat9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311695106243:android:917b790ef6a4ba9b",
+        "android_client_info": {
+          "package_name": "com.caucse.seatchecker.seatchecker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311695106243-9edqocmfelqq1siaotcf2meshea55nkq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.caucse.seatchecker.seatchecker",
+            "certificate_hash": "2672eebc92543a34e4021a4547883fde3da14ce8"
+          }
+        },
+        {
+          "client_id": "311695106243-mp46tvidlfklqn4ihgllleuhr7heoq9j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAW20fxZ4N9jNBoD503S7YVDZ4VN_cv_Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311695106243-mp46tvidlfklqn4ihgllleuhr7heoq9j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
