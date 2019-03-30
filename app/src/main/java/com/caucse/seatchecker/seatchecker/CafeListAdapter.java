@@ -1,47 +1,58 @@
 package com.caucse.seatchecker.seatchecker;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class CafeListAdapter extends BaseAdapter {
+public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.CustomViewHolder> {
 
-    private ArrayList<Cafe> cafeList = new ArrayList<>();
-    @Override
-    public int getCount() {
-        return cafeList.size();
-    }
+    private ArrayList<Cafe> cafeList;
 
-    @Override
-    public Object getItem(int position) {
-        return cafeList.get(position);
-    }
+    class CustomViewHolder extends RecyclerView.ViewHolder{
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+        ImageView ivImageView;
+        TextView tvNameOfCafe;
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final Context context = parent.getContext();
+        CustomViewHolder(View view) {
+            super(view);
+            this.ivImageView = view.findViewById(R.id.imageview_recyclerview);
+            this.tvNameOfCafe = view.findViewById(R.id.textview_recyclerview);
 
-        if(convertView == null){
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.cafelist_item,parent,false);
         }
-
-        //findviewbyid
-
-        Cafe curCafe = cafeList.get(position);
-
-        //set
-
-        return convertView;
-
     }
+
+    public  CafeListAdapter(ArrayList<Cafe> list){
+        this.cafeList = list;
+    }
+
+
+    @Override
+    public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.cafelist_item, parent, false);
+
+        return new CustomViewHolder(view);
+    }
+
+    //show data
+    @Override
+    public void onBindViewHolder(CustomViewHolder holder, int position) {
+        holder.tvNameOfCafe.setText(cafeList.get(position).getAddress_dong());
+        //todo : show information of cafes
+    }
+
+    @Override
+    public int getItemCount() {
+        return (null != cafeList? cafeList.size() : 0);
+    }
+
+
 }

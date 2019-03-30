@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
@@ -24,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Initializing the TabLayout
         tabLayout =  findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("Tab One"));
-        tabLayout.addTab(tabLayout.newTab().setText("Tab Two"));
+        tabLayout.addTab(tabLayout.newTab().setText("카페 검색하기"));
+        tabLayout.addTab(tabLayout.newTab().setText("알림설정"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         // Initializing ViewPager
