@@ -3,56 +3,89 @@ package com.caucse.seatchecker.seatchecker;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.CustomViewHolder> {
+import static android.content.ContentValues.TAG;
 
-    private ArrayList<Cafe> cafeList;
+public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.ViewHolder> {
 
-    class CustomViewHolder extends RecyclerView.ViewHolder{
 
-        ImageView ivImageView;
-        TextView tvNameOfCafe;
+    private ArrayList<Cafe> list;
 
-        CustomViewHolder(View view) {
-            super(view);
-            this.ivImageView = view.findViewById(R.id.imageview_recyclerview);
-            this.tvNameOfCafe = view.findViewById(R.id.textview_recyclerview);
-
-        }
+    CafeListAdapter(ArrayList<Cafe> cafe) {
+        this.list = cafe;
     }
 
-    public  CafeListAdapter(ArrayList<Cafe> list){
-        this.cafeList = list;
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
+        //RecyclerView에 들어갈 Data(Student로 이루어진 ArrayList 배열인 arrayListOfStudent)를 기반으로 Row를 생성할 때
+        //해당 row의 위치에 해당하는 Student를 가져와서
+        Cafe cafe = list.get(position);
+
+        //넘겨받은 ViewHolder의 Layout에 있는 View들을 어떻게 다룰지 설정
+        //ex. TextView의 text를 어떻게 설정할지, Button을 어떻게 설정할지 등등...
+        TextView txtName = holder.txtName;
+        txtName.setText(cafe.getAddress_dong());
+
+
     }
 
 
     @Override
-    public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.cafelist_item, parent, false);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
 
-        return new CustomViewHolder(view);
+        //받은 Context를 기반으로 LayoutInflater를 생성
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+
+        //생성된 LayoutInflater로 어떤 Layout을 가져와서 어떻게 View를 그릴지 결정
+        View cafeView = layoutInflater.inflate(R.layout.cafelist_item, parent, false);
+
+        //생성된 ViewHolder를 OnBindViewHolder로 넘겨줌
+        return new ViewHolder(cafeView);
+
     }
 
-    //show data
     @Override
-    public void onBindViewHolder(CustomViewHolder holder, int position) {
-        holder.tvNameOfCafe.setText(cafeList.get(position).getAddress_dong());
-        //todo : show information of cafes
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        //RecyclerView에 들어갈 Data(Student로 이루어진 ArrayList 배열인 arrayListOfStudent)를 기반으로 Row를 생성할 때
+        //해당 row의 위치에 해당하는 Student를 가져와서
+        Cafe cafe = list.get(position);
+
+        //넘겨받은 ViewHolder의 Layout에 있는 View들을 어떻게 다룰지 설정
+        //ex. TextView의 text를 어떻게 설정할지, Button을 어떻게 설정할지 등등...
+        TextView txtName = holder.txtName;
+        txtName.setText(cafe.getAddress_dong());
     }
 
     @Override
     public int getItemCount() {
-        return (null != cafeList? cafeList.size() : 0);
+        return list.size();
     }
 
 
+    class ViewHolder extends RecyclerView.ViewHolder {
+
+        TextView txtName;
+        public TextView txtAddress;
+
+        //ViewHolder 생성
+        ViewHolder(View itemView) {
+            super(itemView);
+
+            //Complete recycler view
+            txtName = itemView.findViewById(R.id.textview_recyclerview);
+            //txtAddress = (TextView) itemView.findViewById(R.id.txtAddress);
+
+        }
+    }
 }
+
