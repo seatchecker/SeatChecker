@@ -30,4 +30,8 @@ public class Cafe {
         this.dong = dong;
     }
 
+
+    public String getName(){
+        return this.name;
+    }
 }

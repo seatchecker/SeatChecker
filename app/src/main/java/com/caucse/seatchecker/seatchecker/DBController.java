@@ -22,34 +22,30 @@ import java.util.Objects;
 import static android.content.ContentValues.TAG;
 
 
-class DBController extends  AsyncTask<Void,Void,Void>{
+class DBController  {
 
     private ProgressDialog p;
     private ArrayList<Cafe> cafes;
-   
+
     View view;
 
-    DBController(View view){
+    DBController(View view) {
 
         cafes = new ArrayList<>();
         this.view = view;
     }
-    @Override
-    protected void onPreExecute() {
-        p = new ProgressDialog(view.getContext());
-        p.show();
-        super.onPreExecute();
-    }
 
-    @Override
-    protected Void doInBackground(Void... voids) {
+    void getCafeInfo() {
+        final ProgressDialog progressDialog = new ProgressDialog(view.getContext());
+        progressDialog.show();
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference cafe = db.collection("cafeinfo");
         cafe.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())){
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
                         /*********add cafe info to arrayList*****************/
                         String add_dong = Objects.requireNonNull(documentSnapshot.getData()).get("dong").toString();
                         String add_gu = documentSnapshot.getData().get("gu").toString();
@@ -58,10 +54,12 @@ class DBController extends  AsyncTask<Void,Void,Void>{
                         String name = documentSnapshot.getData().get("name").toString();
                         int numOfTables = Integer.parseInt(documentSnapshot.getData().get("tablenum").toString());
 
-                        Cafe cafe = new Cafe(add_dong,add_gu,location,floor,name,numOfTables);
+                        Cafe cafe = new Cafe(add_dong, add_gu, location, floor, name, numOfTables);
                         cafes.add(cafe);
                     }
-                     new Viewer(view,cafes);
+
+                    new Viewer(view, cafes);
+                    progressDialog.dismiss();
 
                 }
             }
@@ -72,12 +70,13 @@ class DBController extends  AsyncTask<Void,Void,Void>{
                         e.printStackTrace();
                     }
                 });
-        return null;
+
+
     }
 
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        p.dismiss();
-        super.onPostExecute(aVoid);
+
+    boolean checkManagerPassword(String cafeName, String password){
+        //todo
+        return true;
     }
 }

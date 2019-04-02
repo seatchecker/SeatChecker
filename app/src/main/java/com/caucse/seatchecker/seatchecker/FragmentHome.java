@@ -35,7 +35,7 @@ public class FragmentHome extends Fragment{
         cafes = new ArrayList<>();
 
         DBController DB = new DBController(view);
-        DB.execute();
+        DB.getCafeInfo();
         return view;
     }
 
