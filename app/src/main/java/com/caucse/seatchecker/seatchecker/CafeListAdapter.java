@@ -25,27 +25,6 @@ public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.ViewHo
         this.list = cafe;
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
-        //RecyclerView에 들어갈 Data(Student로 이루어진 ArrayList 배열인 arrayListOfStudent)를 기반으로 Row를 생성할 때
-        //해당 row의 위치에 해당하는 Student를 가져와서
-        final Cafe cafe = list.get(position);
-
-        //넘겨받은 ViewHolder의 Layout에 있는 View들을 어떻게 다룰지 설정
-        //ex. TextView의 text를 어떻게 설정할지, Button을 어떻게 설정할지 등등...
-        TextView txtName = holder.txtName;
-        txtName.setText(cafe.getAddress_dong());
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(),CafeInfoActivity.class);
-                intent.putExtra("name",cafe.getName());
-                v.getContext().startActivity(intent);
-            }
-        });
-
-    }
 
 
     @Override
@@ -65,14 +44,19 @@ public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        //RecyclerView에 들어갈 Data(Student로 이루어진 ArrayList 배열인 arrayListOfStudent)를 기반으로 Row를 생성할 때
-        //해당 row의 위치에 해당하는 Student를 가져와서
-        Cafe cafe = list.get(position);
+        final Cafe cafe = list.get(position);
 
-        //넘겨받은 ViewHolder의 Layout에 있는 View들을 어떻게 다룰지 설정
-        //ex. TextView의 text를 어떻게 설정할지, Button을 어떻게 설정할지 등등...
         TextView txtName = holder.txtName;
         txtName.setText(cafe.getName());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(),CafeInfoActivity.class);
+                intent.putExtra("name",cafe.getName());
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -84,7 +68,8 @@ public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtName;
-        public TextView txtAddress;
+        TextView txtAddress;
+        ImageView ivPicture;
 
         //ViewHolder 생성
         ViewHolder(View itemView) {
@@ -92,6 +77,7 @@ public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.ViewHo
 
             //Complete recycler view
             txtName = itemView.findViewById(R.id.textview_recyclerview);
+            ivPicture = itemView.findViewById(R.id.imageview_recyclerview);
             //txtAddress = (TextView) itemView.findViewById(R.id.txtAddress);
 
         }
