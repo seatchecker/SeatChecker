@@ -16,6 +16,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -39,6 +41,7 @@ class DBController  {
         final ProgressDialog progressDialog = new ProgressDialog(view.getContext());
         progressDialog.show();
 
+        final FirebaseStorage fs = FirebaseStorage.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference cafe = db.collection("cafeinfo");
         cafe.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -54,7 +57,11 @@ class DBController  {
                         String name = documentSnapshot.getData().get("name").toString();
                         int numOfTables = Integer.parseInt(documentSnapshot.getData().get("tablenum").toString());
 
+                        String url = documentSnapshot.getId()+".jpg";
                         Cafe cafe = new Cafe(add_dong, add_gu, location, floor, name, numOfTables);
+                        //String url = cafe.getName()+".jpg";
+                        //String url = "2gram.jpg";
+                        cafe.setStorageRef(fs.getReference().child(url));
                         cafes.add(cafe);
                     }
 

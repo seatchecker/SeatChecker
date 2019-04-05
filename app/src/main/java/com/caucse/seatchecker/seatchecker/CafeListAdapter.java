@@ -2,6 +2,7 @@ package com.caucse.seatchecker.seatchecker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +23,18 @@ public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.ViewHo
 
 
     private ArrayList<Cafe> list;
+    private Context context;
 
-    CafeListAdapter(ArrayList<Cafe> cafe) {
+    CafeListAdapter(ArrayList<Cafe> cafe, Context context) {
         this.list = cafe;
+        this.context = context;
     }
 
 
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
 
         //받은 Context를 기반으로 LayoutInflater를 생성
@@ -43,11 +49,13 @@ public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Cafe cafe = list.get(position);
 
         TextView txtName = holder.txtName;
-        txtName.setText(cafe.getName());
+        txtName.setText(cafe.getName() + "("+cafe.getAddress_gu()+" "+cafe.getAddress_dong()+")");
+        ImageView ivPicture = holder.ivPicture;
+        Glide.with(context).load(cafe.getStorage()).into(ivPicture);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

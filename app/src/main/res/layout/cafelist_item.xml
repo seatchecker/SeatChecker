@@ -2,17 +2,20 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="150dp"
     android:layout_margin="10dp">
 
    <ImageView
        android:id="@+id/imageview_recyclerview"
        android:layout_width="match_parent"
-       android:layout_height="150dp" />
+       android:layout_height="match_parent"
+       android:scaleType="fitXY"/>
     <TextView
         android:id="@+id/textview_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:backgroundTint="@color/halftransparentWhite"
+        android:textStyle="bold"
+        android:background="@color/halftransparentWhite"
+        android:textSize="25sp"
         />
 </FrameLayout>

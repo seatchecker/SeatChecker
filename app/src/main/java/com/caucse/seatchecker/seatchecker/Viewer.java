@@ -15,7 +15,7 @@ class Viewer {
     View view;
 
     Viewer(View view,ArrayList<Cafe> cafes){
-        CafeListAdapter recyclerDataAdapter = new CafeListAdapter(cafes);
+        CafeListAdapter recyclerDataAdapter = new CafeListAdapter(cafes, view.getContext());
         RecyclerView recyclerView = view.findViewById(R.id.cafeList_recyclerView);
         recyclerView.setAdapter(recyclerDataAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
