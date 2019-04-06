@@ -1,12 +1,10 @@
 package com.caucse.seatchecker.seatchecker;
 
-import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,13 +19,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static android.content.ContentValues.TAG;
-
 
 class DBController  {
 
+    private final int SEND_INFORMATION = 1;
     private ProgressDialog p;
     private ArrayList<Cafe> cafes;
+    private String databaseHash ;
+    private String inputPassword;
+
 
     View view;
 
@@ -49,7 +49,6 @@ class DBController  {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
-                        /*********add cafe info to arrayList*****************/
                         String add_dong = Objects.requireNonNull(documentSnapshot.getData()).get("dong").toString();
                         String add_gu = documentSnapshot.getData().get("gu").toString();
                         String location = documentSnapshot.getData().get("location").toString();
@@ -59,9 +58,7 @@ class DBController  {
 
                         String url = documentSnapshot.getId()+".jpg";
                         Cafe cafe = new Cafe(add_dong, add_gu, location, floor, name, numOfTables);
-                        //String url = cafe.getName()+".jpg";
-                        //String url = "2gram.jpg";
-                        cafe.setStorageRef(fs.getReference().child(url));
+                        cafe.setImageURL(url);
                         cafes.add(cafe);
                     }
 
@@ -82,8 +79,38 @@ class DBController  {
     }
 
 
-    boolean checkManagerPassword(String cafeName, String password){
-        //todo
-        return true;
+    void checkManagerPassword(final String cafeName, final String inputPassword, final CustomDialog dialog){
+        this.inputPassword = inputPassword;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference manager = db.collection("manager");
+        manager.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+
+                    for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
+                        String name  = Objects.requireNonNull(documentSnapshot.getData()).get("cafename").toString();
+                        if(name != null && name.equals(cafeName) ){
+                            databaseHash =  Objects.requireNonNull(documentSnapshot.getData()).get("pw").toString();
+                            break;
+                        }
+                    }
+                    MD5Hash hash = new MD5Hash(inputPassword);
+                    String inputHash = hash.Encode();
+                    if(databaseHash.equals(inputHash)){
+                        dialog.sendActivity();
+                    }else{
+                        dialog.sendWrongMessage();
+                    }
+                }
+            }
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
     }
 }
+

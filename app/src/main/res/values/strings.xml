@@ -2,5 +2,7 @@
     <string name="app_name">SeatChecker</string>
     <string name="manager">manager</string>
     <string name="check">확인</string>
-    <string name="Cancel">취소</string>
+    <string name="CheckingSeat">좌석 확인하기</string>
+    <string name="Check">확인</string>
+    <string name="ManagerMessage">관리자용 페이지입니다. 코드를 입력해주세요.</string>
 </resources>

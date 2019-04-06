@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,16 +54,20 @@ public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Cafe cafe = list.get(position);
 
+        FirebaseStorage fs = FirebaseStorage.getInstance();
         TextView txtName = holder.txtName;
         txtName.setText(cafe.getName() + "("+cafe.getAddress_gu()+" "+cafe.getAddress_dong()+")");
         ImageView ivPicture = holder.ivPicture;
-        Glide.with(context).load(cafe.getStorage()).into(ivPicture);
+        //Glide.with(context).load(cafe.getStorage()).into(ivPicture);
+        StorageReference reference = fs.getReference().child(cafe.getImageURL());
+        Glide.with(context).load(reference).into(ivPicture);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(),CafeInfoActivity.class);
                 intent.putExtra("name",cafe.getName());
+                intent.putExtra("CAFE",cafe);
                 v.getContext().startActivity(intent);
             }
         });

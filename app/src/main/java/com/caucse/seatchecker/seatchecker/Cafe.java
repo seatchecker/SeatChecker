@@ -1,16 +1,17 @@
 package com.caucse.seatchecker.seatchecker;
 
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-public class Cafe {
+import java.io.Serializable;
+
+public class Cafe implements Serializable {
     private String dong;
     private String gu;
     private String location;
     private int floor;
     private String name;
     private int numOfTables;
-    private StorageReference imageRef;
+    private String imageURL;
+
     Cafe(String dong, String gu){
         this.dong = dong;
         this.gu = gu;
@@ -24,17 +25,7 @@ public class Cafe {
         this.numOfTables = table;
     }
 
-    public StorageReference getStorage(){
-        return this.imageRef;
-    }
 
-    void setStorageRef() {
-        setStorageRef();
-    }
-
-    void setStorageRef(StorageReference r){
-        this.imageRef =r;
-    }
     String getAddress_gu(){
         return gu;
     }
@@ -48,5 +39,12 @@ public class Cafe {
 
     public String getName(){
         return this.name;
+    }
+
+    String getImageURL(){
+        return this.imageURL;
+    }
+    void setImageURL(String url){
+        this.imageURL = url;
     }
 }
