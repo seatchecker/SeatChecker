@@ -39,13 +39,11 @@ public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.ViewHo
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
 
-        //받은 Context를 기반으로 LayoutInflater를 생성
+
         LayoutInflater layoutInflater = LayoutInflater.from(context);
 
-        //생성된 LayoutInflater로 어떤 Layout을 가져와서 어떻게 View를 그릴지 결정
         View cafeView = layoutInflater.inflate(R.layout.cafelist_item, parent, false);
 
-        //생성된 ViewHolder를 OnBindViewHolder로 넘겨줌
         return new ViewHolder(cafeView);
 
     }
@@ -59,9 +57,13 @@ public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.ViewHo
         txtName.setText(cafe.getName() + "("+cafe.getAddress_gu()+" "+cafe.getAddress_dong()+")");
         ImageView ivPicture = holder.ivPicture;
         //Glide.with(context).load(cafe.getStorage()).into(ivPicture);
-        StorageReference reference = fs.getReference().child(cafe.getImageURL());
-        Glide.with(context).load(reference).into(ivPicture);
 
+        try {
+            StorageReference reference = fs.getReference().child(cafe.getImageURL());
+            Glide.with(context).load(reference).into(ivPicture);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,10 +91,9 @@ public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.ViewHo
         ViewHolder(View itemView) {
             super(itemView);
 
-            //Complete recycler view
+
             txtName = itemView.findViewById(R.id.textview_recyclerview);
             ivPicture = itemView.findViewById(R.id.imageview_recyclerview);
-            //txtAddress = (TextView) itemView.findViewById(R.id.txtAddress);
 
         }
     }

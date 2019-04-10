@@ -30,7 +30,7 @@ class CustomDialog {
     }
 
 
-    void callFunction(final Cafe cafe){
+    void callManagerPasswordDialog(final Cafe cafe){
         this.cafe = cafe;
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -52,22 +52,18 @@ class CustomDialog {
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBController db = new DBController(view);
-                db.checkManagerPassword(cafe.getName() ,edtPassword.getText().toString(),customDialog );
+                SHA1Hash HashFunction = new SHA1Hash(edtPassword.getText().toString().trim());
+                String inputHash = HashFunction.Encode();
+                if(cafe.getHash().equals(inputHash)){
+                    Intent intent = new Intent(context,ManagerActivity.class);
+                    intent.putExtra("CAFE",cafe);
+                    context.startActivity(intent);
+                    dialog.dismiss();
+                }else{
+                    Toast.makeText(context,"비밀번호를 잘못 입력하셨습니다.",Toast.LENGTH_SHORT).show();
+                    edtPassword.setText("");
+                }
             }
         });
-    }
-
-    void sendWrongMessage(){
-        Toast.makeText(context,"비밀번호를 잘못 입력하셨습니다.",Toast.LENGTH_SHORT).show();
-        edtPassword.setText("");
-
-    }
-
-    void sendActivity(){
-        Intent intent = new Intent(context,ManagerActivity.class);
-        intent.putExtra("CAFE",cafe);
-        context.startActivity(intent);
-        dialog.dismiss();
     }
 }

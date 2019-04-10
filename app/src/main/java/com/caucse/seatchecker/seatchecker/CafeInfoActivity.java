@@ -34,7 +34,7 @@ public class CafeInfoActivity extends AppCompatActivity {
                 view = inflater.inflate(R.layout.activity_cafe_info, null);
                 CustomDialog customDialog = new CustomDialog(view);
 
-                customDialog.callFunction(curCafe);
+                customDialog.callManagerPasswordDialog(curCafe);
             }
         });
 
