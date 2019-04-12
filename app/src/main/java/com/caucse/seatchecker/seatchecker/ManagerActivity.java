@@ -1,5 +1,6 @@
 package com.caucse.seatchecker.seatchecker;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +21,8 @@ public class ManagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager);
 
+        Intent intent = getIntent();
+        final Cafe cafe = (Cafe)intent.getSerializableExtra("CAFE");
         manager_list = new ArrayList<>();
         manager_list.add("좌석 상태 관리하기");
         manager_list.add("좌석 위치 변환하기");
@@ -34,7 +37,8 @@ public class ManagerActivity extends AppCompatActivity {
                     case 0:
                         //todo : send intent
                     case 1:
-                        // todo: send intent
+                        CustomDialog dialog = new CustomDialog(view);
+                        dialog.callTableInfoResetDialog(cafe);
                     default: break;
                 }
             }

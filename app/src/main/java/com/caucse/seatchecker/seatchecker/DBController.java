@@ -108,7 +108,9 @@ class DBController  {
                     cafes.addAll(types);
                     Log.d(TAG, "onSuccess: " + cafes);
 
-                    new Viewer(view, cafes);
+                    Viewer list = new Viewer(view);
+                    list.CafeListViewer(cafes);
+
                     progressDialog.dismiss();
 
                 }
