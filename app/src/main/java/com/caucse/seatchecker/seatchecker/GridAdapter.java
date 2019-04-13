@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> implements ItemTouchHelperAdapter{
+public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
 
     private ArrayList<GridElement> arrays;
     private Context context;
@@ -27,11 +27,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> im
         GridAdapter.listener = listener;
         this.width = width;
         this.length = length;
-    }
-
-    @Override
-    public void onItemMove(int fromPosition, int toPosition) {
-        listener.onItemDrag(fromPosition,toPosition);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

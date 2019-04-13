@@ -37,8 +37,9 @@ class Controller {
             arrays.add(new GridElement());
         }
 
-        for(TableInfo table : tables){
-            if(Integer.parseInt(table.getPosition().get("second").toString()) == -1 ) {
+        for(int i = 0; i<tables.size(); i++){
+            TableInfo table = tables.get(i);
+            if(Integer.parseInt(table.getPosition().get("second").toString())== -1 ){
                 TwoTables.add(table);
             }else{
                 FourTables.add(table);
@@ -113,7 +114,7 @@ class Controller {
                 && arrays.get(position).getStatus() != TableInfo.FOURTABLE)
             return -1;
 
-        for(int i = 0; ResultTables.get(i)!= null; i++){
+        for(int i = 0; i< ResultTables.size(); i++){
             TableInfo result = ResultTables.get(i);
             int first =Integer.parseInt(result.getPosition().get("first").toString());
             int second = Integer.parseInt(result.getPosition().get("second").toString());
@@ -149,12 +150,17 @@ class Controller {
     }
 
     private void addTable(TableInfo info,ArrayList<TableInfo> list){
-        for(int i = 0; list.get(i)!= null ; i++){
+        for(int i = 0; i < list.size() ; i++){
             String tableName = list.get(i).getTableName();
             if(info.getTableName().compareTo(tableName) < 0){
                 list.add(i,info);
             }
         }
+    }
+
+
+    boolean isAllTableSettingComplete(){
+        return TwoTables.isEmpty() && FourTables.isEmpty();
     }
 }
 

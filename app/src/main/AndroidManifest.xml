@@ -20,7 +20,8 @@
         </activity>
         <activity android:name=".CafeInfoActivity" />
         <activity android:name=".ManagerActivity" />
-        <activity android:name=".MoveTableLocationActivity"></activity>
+        <activity android:name=".MoveTableLocationActivity" />
+        <activity android:name=".SetPlugActivity"></activity>
     </application>
 
 </manifest>

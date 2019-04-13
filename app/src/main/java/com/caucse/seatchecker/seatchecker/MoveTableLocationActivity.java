@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ public class MoveTableLocationActivity extends AppCompatActivity implements Grid
 
     private Controller controller;
     private RadioGroup radioGroup;
+    private Button btnNextPage;
     private ArrayList<TableInfo> tables;
     Cafe cafe;
     @Override
@@ -27,10 +29,18 @@ public class MoveTableLocationActivity extends AppCompatActivity implements Grid
         tables = (ArrayList<TableInfo>)intent.getSerializableExtra("TABLE");
 
         radioGroup = findViewById(R.id.radio);
+        btnNextPage = findViewById(R.id.btnNextPage);
         ((RadioButton)radioGroup.getChildAt(0)).setChecked(true);
 
         controller = new Controller(this,cafe);
         controller.initTableGridView(this,tables);
+
+        btnNextPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                controller.isAllTableSettingComplete();
+            }
+        });
 
     }
 
