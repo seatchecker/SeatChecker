@@ -88,9 +88,9 @@ class CustomDialog {
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,MoveTableLocationActivity.class);
-                intent.putExtra("CAFE",cafe);
-                context.startActivity(intent);
+
+                DBController dbController = new DBController(view);
+                dbController.getTableInfo(cafe);
                 dialog.dismiss();
             }
         });

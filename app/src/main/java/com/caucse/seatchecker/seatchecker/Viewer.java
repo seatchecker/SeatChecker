@@ -42,10 +42,10 @@ class Viewer {
     }
 
 
-    void TableGridViewer(final GridAdapter.GridItemListener listener, ArrayList<TableInfo> tables, int width,int length){
+    void TableGridViewer(final GridAdapter.GridItemListener listener, ArrayList<GridElement> arrays, int width, int length){
         layoutManager = new GridLayoutManager(context, width);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new GridAdapter(context,tables ,listener,width,length);
+        adapter = new GridAdapter(context, arrays ,listener,width,length);
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -100,6 +100,11 @@ class Viewer {
 
 
     }
+
+    void updateGrid(int position){
+        adapter.notifyItemChanged(position);
+    }
+
 
 
 }

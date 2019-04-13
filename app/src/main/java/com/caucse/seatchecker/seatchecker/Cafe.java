@@ -14,6 +14,7 @@ public class Cafe implements Serializable {
 
     private String dong = "";
 
+    private String did = "";
     private int floor = 0;
     private String gu = "";
     private String hash = "";
@@ -49,6 +50,9 @@ public class Cafe implements Serializable {
         this.hash = hash;
     }
 
+    String getDid() {
+        return did;
+    }
 
     String getAddress_gu() {
         return gu;
@@ -71,7 +75,7 @@ public class Cafe implements Serializable {
         return this.imageURL;
     }
 
-    public Map<String, Object> getCounter() {
+    Map<String, Object> getCounter() {
         return counter;
     }
 
@@ -99,11 +103,11 @@ public class Cafe implements Serializable {
         return tablenum;
     }
 
-    public Map<String, Object> getDoor() {
+    Map<String, Object> getDoor() {
         return door;
     }
 
-    public Map<String, Object> getGrid() {
+    Map<String, Object> getGrid() {
         return grid;
     }
 }

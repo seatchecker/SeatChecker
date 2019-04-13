@@ -4,12 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
-import android.view.DragEvent;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -17,20 +12,18 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import static android.support.constraint.Constraints.TAG;
-
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> implements ItemTouchHelperAdapter{
 
-    private ArrayList<TableInfo> tables;
+    private ArrayList<GridElement> arrays;
     private Context context;
     private static GridItemListener listener;
     private int width;
     private int length;
 
 
-    GridAdapter(Context context, ArrayList<TableInfo> tables, GridItemListener listener, int width, int length){
+    GridAdapter(Context context, ArrayList<GridElement> arrays, GridItemListener listener, int width, int length){
         this.context = context;
-        this.tables = tables;
+        this.arrays = arrays;
         GridAdapter.listener = listener;
         this.width = width;
         this.length = length;
@@ -78,7 +71,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> im
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        switch(tables.get(position).getKindTable()){
+        switch(arrays.get(position).getStatus()){
             case TableInfo.COUNTER :
             case TableInfo.DOOR :
                 holder.layout.setBackgroundColor(context.getResources().getColor(R.color.doorColor));
@@ -90,11 +83,12 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> im
                 holder.layout.setBackgroundColor(context.getResources().getColor(R.color.twoTable));
                 break;
         }
+        holder.tvPlug.setText(arrays.get(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        return tables.size();
+        return arrays.size();
     }
 
     public interface GridItemListener{
@@ -102,8 +96,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> im
         void onItemDrag(int startPosition, int endPosition);
     }
 
-    public void setItem(ArrayList<TableInfo> info){
-        this.tables = info;
+    public void setItem(ArrayList<GridElement> info){
+        this.arrays = info;
     }
 
 

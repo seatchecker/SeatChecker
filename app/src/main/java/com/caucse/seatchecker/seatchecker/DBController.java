@@ -1,6 +1,7 @@
 package com.caucse.seatchecker.seatchecker;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,7 @@ class DBController  {
     private final int SEND_INFORMATION = 1;
     private ProgressDialog p;
     private ArrayList<Cafe> cafes;
+    private ArrayList<TableInfo> tables;
     private String databaseHash ;
     private String inputPassword;
 
@@ -37,54 +39,9 @@ class DBController  {
     DBController(View view) {
 
         cafes = new ArrayList<>();
+        tables = new ArrayList<>();
         this.view = view;
     }
-
-
-    /*
-    void getCafeInfo() {
-        final ProgressDialog progressDialog = new ProgressDialog(view.getContext());
-        progressDialog.show();
-
-        final FirebaseStorage fs = FirebaseStorage.getInstance();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference cafe = db.collection("cafeinfo");
-        cafe.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
-                        String add_dong = Objects.requireNonNull(documentSnapshot.getData()).get("dong").toString();
-                        String add_gu = documentSnapshot.getData().get("gu").toString();
-                        String location = documentSnapshot.getData().get("location").toString();
-                        int floor = Integer.parseInt(documentSnapshot.getData().get("floor").toString());
-                        String name = documentSnapshot.getData().get("name").toString();
-                        int numOfTables = Integer.parseInt(documentSnapshot.getData().get("tablenum").toString());
-                        String hash = documentSnapshot.getData().get("hash").toString();
-
-                        String url = documentSnapshot.getId()+".jpg";
-                        Cafe cafe = new Cafe(add_dong, add_gu, location, floor, name, numOfTables,hash);
-                        cafe.setImageURL(url);
-                        cafes.add(cafe);
-                    }
-
-                    new Viewer(view, cafes);
-                    progressDialog.dismiss();
-
-                }
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-
-
-    }
-
-    */
 
 
     void getCafeInfo(){
@@ -124,5 +81,40 @@ class DBController  {
     }
 
 
+
+    void getTableInfo(final Cafe cafe){
+        final ProgressDialog progressDialog = new ProgressDialog(view.getContext());
+        progressDialog.show();
+
+        final FirebaseStorage fs = FirebaseStorage.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference talbes = db.collection("cafeinfo").document(cafe.getDid()).collection("table");
+
+        talbes.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (queryDocumentSnapshots.isEmpty()) {
+                    Log.d(TAG, "onSuccess: LIST EMPTY");
+                } else {
+                    List<TableInfo> types = queryDocumentSnapshots.toObjects(TableInfo.class);
+                    tables.addAll(types);
+                    Log.d(TAG, "onSuccess: " + cafes);
+                    progressDialog.dismiss();
+
+
+                    Intent intent = new Intent(view.getContext(),MoveTableLocationActivity.class);
+                    intent.putExtra("CAFE",cafe);
+                    intent.putExtra("TABLE",tables);
+                    view.getContext().startActivity(intent);
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+    }
 }
 

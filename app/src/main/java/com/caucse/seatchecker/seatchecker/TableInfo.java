@@ -1,51 +1,65 @@
 package com.caucse.seatchecker.seatchecker;
 
-import android.media.MediaCas;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-public class TableInfo {
+public class TableInfo implements Serializable {
 
+    final static int NONE = -1;
     final static int TWOTABLE = 100;
     final static int FOURTABLE = 200;
     final static int DOOR = 150;
     final static int COUNTER = 170;
-    final static int PLUG = 300;
-    final static int NON_PLUG = 400;
 
-    private String tableName;
-    private boolean plug;
-    private int kindTable;
+    private String tableName="";
+    private Map<String, Object> position = new HashMap<>();
+    private boolean plug =false;
 
-    public int getTWOTABLE() {
-        return TWOTABLE;
-    }
 
-    public int getFOURTABLE() {
-        return FOURTABLE;
-    }
-
-    public int getDOOR() {
-        return DOOR;
-    }
-
-    public int getCOUNTER() {
-        return COUNTER;
-    }
-
-    public int getPLUG() {
-        return PLUG;
-    }
-
-    public int getNON_PLUG() {
-        return NON_PLUG;
+    TableInfo(){
+        position.put("first",0);
+        position.put("second",0);
     }
 
     public String getTableName() {
         return tableName;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public Map<String, Object> getPosition() {
+        return position;
     }
+
+    public boolean isPlug() {
+        return plug;
+    }
+
+    public void setPosition(int pos1, int pos2){
+        position.put("first",pos1);
+        position.put("second",pos2);
+    }
+}
+
+class GridElement {
+    private int status;
+    private boolean plug;
+    private String name;
+
+
+    GridElement(){
+        this.status = TableInfo.NONE;
+        this.plug = false;
+        this.name = null;
+    }
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+    public void setName(String name){this.name = name;}
+    public String getName(){return this.name;}
 
     public boolean isPlug() {
         return plug;
@@ -53,13 +67,5 @@ public class TableInfo {
 
     public void setPlug(boolean plug) {
         this.plug = plug;
-    }
-
-    int getKindTable() {
-        return kindTable;
-    }
-
-    void setKindTable(int kindTable) {
-        this.kindTable = kindTable;
     }
 }
