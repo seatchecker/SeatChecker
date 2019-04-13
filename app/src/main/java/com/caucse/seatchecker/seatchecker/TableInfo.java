@@ -22,11 +22,11 @@ public class TableInfo implements Serializable {
         position.put("second",0);
     }
 
-    public String getTableName() {
+    String getTableName() {
         return tableName;
     }
 
-    public Map<String, Object> getPosition() {
+    Map<String, Object> getPosition() {
         return position;
     }
 
@@ -34,7 +34,7 @@ public class TableInfo implements Serializable {
         return plug;
     }
 
-    public void setPosition(int pos1, int pos2){
+    void setPosition(int pos1, int pos2){
         position.put("first",pos1);
         position.put("second",pos2);
     }
@@ -51,11 +51,11 @@ class GridElement {
         this.plug = false;
         this.name = null;
     }
-    public int getStatus() {
+    int getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    void setStatus(int status) {
         this.status = status;
     }
     public void setName(String name){this.name = name;}
