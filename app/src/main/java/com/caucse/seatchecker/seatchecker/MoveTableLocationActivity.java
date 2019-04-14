@@ -1,5 +1,6 @@
 package com.caucse.seatchecker.seatchecker;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,20 +17,20 @@ public class MoveTableLocationActivity extends AppCompatActivity implements Grid
 
     private Controller controller;
     private RadioGroup radioGroup;
-    private Button btnNextPage;
+    private Button btnNextPage, btnCancelJob;
     private ArrayList<TableInfo> tables;
-    Cafe cafe;
+    private Cafe cafe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_move_table_location);
-
         Intent intent = getIntent();
         cafe = (Cafe)intent.getSerializableExtra("CAFE");
         tables = (ArrayList<TableInfo>)intent.getSerializableExtra("TABLE");
 
         radioGroup = findViewById(R.id.radio);
         btnNextPage = findViewById(R.id.btnNextPage);
+        //abtnCancelJob = findViewById(R.id.btnCancelJob);
         ((RadioButton)radioGroup.getChildAt(0)).setChecked(true);
 
         controller = new Controller(this,cafe);
@@ -38,7 +39,16 @@ public class MoveTableLocationActivity extends AppCompatActivity implements Grid
         btnNextPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                controller.isAllTableSettingComplete();
+                if(!controller.isAllTableSettingComplete()){
+                    Toast.makeText(MoveTableLocationActivity.this, "모든 좌석을 설정해주세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                ArrayList<TableInfo> result = controller.getResultTable();
+                Intent plugIntent = new Intent(getApplicationContext(),SetPlugActivity.class);
+                plugIntent.putExtra("TABLES",result);
+                plugIntent.putExtra("CAFE",cafe);
+                startActivity(plugIntent);
+                finish();
             }
         });
 

@@ -5,5 +5,6 @@
     <string name="CheckingSeat">좌석 확인하기</string>
     <string name="Check">확인</string>
     <string name="ManagerMessage">관리자용 페이지입니다. 코드를 입력해주세요.</string>
-    <string name="toNextStep">다음 단계로 넘어가기</string>
+    <string name="toNextStep">다음 단계로 넘어가기 ></string>
+
 </resources>

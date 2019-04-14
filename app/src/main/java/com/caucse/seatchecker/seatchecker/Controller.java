@@ -1,6 +1,7 @@
 package com.caucse.seatchecker.seatchecker;
 
 import android.content.Context;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,16 +50,20 @@ class Controller {
         int counterSecond = Integer.parseInt(cafe.getCounter().get("second").toString());
 
         arrays.get(counterFirst).setStatus(TableInfo.COUNTER);
+        arrays.get(counterFirst).setName("counter");
         if(counterSecond != -1){
             arrays.get(counterSecond).setStatus(TableInfo.COUNTER);
+            arrays.get(counterSecond).setName("counter");
         }
 
         int doorFirst = Integer.parseInt(cafe.getDoor().get("first").toString());
         int doorSecond = Integer.parseInt(cafe.getDoor().get("second").toString());
 
         arrays.get(doorFirst).setStatus(TableInfo.DOOR);
+        arrays.get(doorFirst).setName("door");
         if(doorSecond != -1){
             arrays.get(doorSecond).setStatus(TableInfo.DOOR);
+            arrays.get(doorSecond).setName("door");
         }
 
         viewer = new Viewer(context);
@@ -108,8 +113,7 @@ class Controller {
             return 1;
 
     }
-    int deleteTable(int position){
-
+    synchronized int deleteTable(int position){
         if(arrays.get(position).getStatus() != TableInfo.TWOTABLE
                 && arrays.get(position).getStatus() != TableInfo.FOURTABLE)
             return -1;
@@ -125,9 +129,7 @@ class Controller {
                     arrays.get(first).setName("");
                     ResultTables.remove(i);
                     viewer.updateGrid(first);
-                    if(TwoTables.size() == 1){
-                        return 1;
-                    }
+                    return 1;
                 }else {
                     addTable(result, FourTables);
                     arrays.get(first).setStatus(TableInfo.NONE);
@@ -137,10 +139,7 @@ class Controller {
                     ResultTables.remove(i);
                     viewer.updateGrid(first);
                     viewer.updateGrid(second);
-
-                    if(FourTables.size() == 1){
-                        return 2;
-                    }
+                    return 2;
 
                 }
 
@@ -154,13 +153,18 @@ class Controller {
             String tableName = list.get(i).getTableName();
             if(info.getTableName().compareTo(tableName) < 0){
                 list.add(i,info);
+                return;
             }
         }
+        list.add(info);
     }
 
 
     boolean isAllTableSettingComplete(){
         return TwoTables.isEmpty() && FourTables.isEmpty();
+    }
+    ArrayList<TableInfo> getResultTable(){
+        return this.ResultTables;
     }
 }
 

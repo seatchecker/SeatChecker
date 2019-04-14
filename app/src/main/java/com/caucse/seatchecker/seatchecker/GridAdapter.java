@@ -77,6 +77,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
             case TableInfo.TWOTABLE :
                 holder.layout.setBackgroundColor(context.getResources().getColor(R.color.twoTable));
                 break;
+            case TableInfo.NONE :
+                holder.layout.setBackgroundColor(context.getResources().getColor(R.color.white));
         }
         holder.tvPlug.setText(arrays.get(position).getName());
     }

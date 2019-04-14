@@ -35,7 +35,8 @@ public class ManagerActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch(position){
                     case 0:
-                        //todo : send intent
+                        //todo : change status of tables
+                        break;
                     case 1:
                         CustomDialog dialog = new CustomDialog(view);
                         dialog.callTableInfoResetDialog(cafe);
