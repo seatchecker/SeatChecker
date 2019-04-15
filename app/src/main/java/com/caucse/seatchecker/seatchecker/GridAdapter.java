@@ -66,6 +66,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         switch(arrays.get(position).getStatus()){
             case TableInfo.COUNTER :
             case TableInfo.DOOR :
@@ -81,6 +82,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
                 holder.layout.setBackgroundColor(context.getResources().getColor(R.color.white));
         }
         holder.tvPlug.setText(arrays.get(position).getName());
+
     }
 
     @Override

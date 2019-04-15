@@ -34,6 +34,10 @@ public class TableInfo implements Serializable {
         return plug;
     }
 
+    void setPlug(boolean plug) {
+        this.plug = plug;
+    }
+
     void setPosition(int pos1, int pos2){
         position.put("first",pos1);
         position.put("second",pos2);
@@ -61,11 +65,13 @@ class GridElement {
     public void setName(String name){this.name = name;}
     public String getName(){return this.name;}
 
-    public boolean isPlug() {
+
+    boolean isPlug() {
         return plug;
     }
 
-    public void setPlug(boolean plug) {
+    void setPlug(boolean plug) {
         this.plug = plug;
     }
+
 }

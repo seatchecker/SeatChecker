@@ -50,26 +50,73 @@ class Controller {
         int counterSecond = Integer.parseInt(cafe.getCounter().get("second").toString());
 
         arrays.get(counterFirst).setStatus(TableInfo.COUNTER);
-        arrays.get(counterFirst).setName("counter");
+        arrays.get(counterFirst).setName("카운터");
         if(counterSecond != -1){
             arrays.get(counterSecond).setStatus(TableInfo.COUNTER);
-            arrays.get(counterSecond).setName("counter");
+            arrays.get(counterSecond).setName("카운터");
         }
 
         int doorFirst = Integer.parseInt(cafe.getDoor().get("first").toString());
         int doorSecond = Integer.parseInt(cafe.getDoor().get("second").toString());
 
         arrays.get(doorFirst).setStatus(TableInfo.DOOR);
-        arrays.get(doorFirst).setName("door");
+        arrays.get(doorFirst).setName("출입문");
         if(doorSecond != -1){
             arrays.get(doorSecond).setStatus(TableInfo.DOOR);
-            arrays.get(doorSecond).setName("door");
+            arrays.get(doorSecond).setName("출입문");
         }
 
         viewer = new Viewer(context);
         viewer.TableGridViewer(listener,arrays,width,length);
     }
 
+    void initTablePlugView(GridAdapter.GridItemListener listener,ArrayList<TableInfo> tables){
+
+        ResultTables = tables;
+        int width = Integer.parseInt(cafe.getGrid().get("width").toString());
+        int length =  Integer.parseInt(cafe.getGrid().get("length").toString());
+        arrays = new ArrayList<>();
+        for(int i = 0; i<width*length; i++){
+            arrays.add(new GridElement());
+            arrays.get(i).setName("");
+            arrays.get(i).setPlug(false);
+        }
+        for(int i = 0; i<tables.size();i++){
+            TableInfo curTable = tables.get(i);
+            int pos1 = Integer.parseInt(curTable.getPosition().get("first").toString());
+            int pos2 = Integer.parseInt(curTable.getPosition().get("second").toString());
+
+            if(pos2 == -1){
+                arrays.get(pos1).setStatus(TableInfo.TWOTABLE);
+            }else{
+                arrays.get(pos1).setStatus(TableInfo.FOURTABLE);
+                arrays.get(pos2).setStatus(TableInfo.FOURTABLE);
+            }
+
+        }
+        int counterFirst = Integer.parseInt(cafe.getCounter().get("first").toString());
+        int counterSecond = Integer.parseInt(cafe.getCounter().get("second").toString());
+
+        arrays.get(counterFirst).setStatus(TableInfo.COUNTER);
+        arrays.get(counterFirst).setName("카운터");
+        if(counterSecond != -1){
+            arrays.get(counterSecond).setStatus(TableInfo.COUNTER);
+            arrays.get(counterSecond).setName("카운터");
+        }
+
+        int doorFirst = Integer.parseInt(cafe.getDoor().get("first").toString());
+        int doorSecond = Integer.parseInt(cafe.getDoor().get("second").toString());
+
+        arrays.get(doorFirst).setStatus(TableInfo.DOOR);
+        arrays.get(doorFirst).setName("출입문");
+        if(doorSecond != -1){
+            arrays.get(doorSecond).setStatus(TableInfo.DOOR);
+            arrays.get(doorSecond).setName("출입문");
+        }
+
+        viewer = new Viewer(context);
+        viewer.TablePlugGridViewer(listener,arrays,width,length);
+    }
 
     int addTwoTable(int position){
         if(arrays.get(position).getStatus() != TableInfo.NONE) {
@@ -165,6 +212,70 @@ class Controller {
     }
     ArrayList<TableInfo> getResultTable(){
         return this.ResultTables;
+    }
+
+
+    synchronized void addPlug(int position){
+
+        if(!arrays.get(position).isPlug()) {
+            if (arrays.get(position).getStatus() == TableInfo.TWOTABLE) {
+                arrays.get(position).setPlug(true);
+                arrays.get(position).setName("P");
+                for (TableInfo table : ResultTables) {
+                    int pos1 = Integer.parseInt(table.getPosition().get("first").toString());
+                    if (pos1 == position) {
+                        table.setPlug(true);
+                        viewer.updateGrid(pos1);
+                        break;
+                    }
+                }
+            } else if (arrays.get(position).getStatus() == TableInfo.FOURTABLE) {
+                for (TableInfo table : ResultTables) {
+                    int pos1 = Integer.parseInt(table.getPosition().get("first").toString());
+                    int pos2 = Integer.parseInt(table.getPosition().get("second").toString());
+                    if (pos1 == position || pos2 == position) {
+                        arrays.get(pos1).setPlug(true);
+                        arrays.get(pos2).setPlug(true);
+                        arrays.get(pos1).setName("P");
+                        arrays.get(pos2).setName("P");
+
+                        table.setPlug(true);
+                        viewer.updateGrid(pos1);
+                        viewer.updateGrid(pos2);
+                        break;
+                    }
+                }
+            }
+        }else{//if plugged
+            if (arrays.get(position).getStatus() == TableInfo.TWOTABLE) {
+                arrays.get(position).setPlug(false);
+                arrays.get(position).setName("");
+                for (TableInfo table : ResultTables) {
+                    int pos1 = Integer.parseInt(table.getPosition().get("first").toString());
+                    if (pos1 == position) {
+                        table.setPlug(false);
+                        viewer.updateGrid(pos1);
+                        break;
+                    }
+                }
+            } else if (arrays.get(position).getStatus() == TableInfo.FOURTABLE) {
+                for (TableInfo table : ResultTables) {
+                    int pos1 = Integer.parseInt(table.getPosition().get("first").toString());
+                    int pos2 = Integer.parseInt(table.getPosition().get("second").toString());
+                    if (pos1 == position || pos2 == position) {
+                        arrays.get(pos1).setPlug(false);
+                        arrays.get(pos2).setPlug(false);
+                        arrays.get(pos1).setName("");
+                        arrays.get(pos2).setName("");
+
+                        table.setPlug(false);
+                        viewer.updateGrid(pos1);
+                        viewer.updateGrid(pos2);
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
 

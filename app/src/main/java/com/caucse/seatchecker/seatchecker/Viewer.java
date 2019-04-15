@@ -101,6 +101,14 @@ class Viewer {
 
     }
 
+
+    void TablePlugGridViewer(final GridAdapter.GridItemListener listener, ArrayList<GridElement> arrays, int width, int length){
+        recyclerView = ((Activity)context).getWindow().getDecorView().findViewById(R.id.plugRecyclerView);
+        layoutManager = new GridLayoutManager(context, width);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new GridAdapter(context, arrays ,listener,width,length);
+        recyclerView.setAdapter(adapter);
+    }
     void updateGrid(int position){
         adapter.notifyItemChanged(position);
     }
