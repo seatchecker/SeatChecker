@@ -26,15 +26,23 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/rb2table"
-                android:text="2인 테이블"
+                android:id="@+id/rb1table"
+                android:text="1인 \n테이블"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"/>
             <RadioButton
+                android:id="@+id/rb2table"
+                android:text="2인 \n테이블"
+                android:layout_width="0dp"
+
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"/>
+            <RadioButton
                 android:id="@+id/rb4table"
-                android:text="4인 테이블"
+                android:text="4인 \n테이블"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -46,6 +54,13 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_gravity="center"/>
+            <RadioButton
+                android:id="@+id/rbOrientation"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="방향설정"
                 android:layout_gravity="center"/>
 
 

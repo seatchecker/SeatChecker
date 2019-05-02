@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="halftransparentWhite">#80FFFFFF</color>
+    <color name="emptyPosition">#BCBBBB</color>
     <color name="greenHalf">#A7DBC2</color>
     <color name="white">#FFFFFF</color>
     <color name="emptyTable">#D2D2D2</color>

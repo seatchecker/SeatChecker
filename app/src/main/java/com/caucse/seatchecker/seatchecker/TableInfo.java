@@ -7,16 +7,17 @@ import java.util.Map;
 public class TableInfo implements Serializable {
 
     final static int NONE = -1;
-    final static int TWOTABLE = 100;
-    final static int FOURTABLE = 200;
+    final static int TWOTABLE = 2;
+    final static int FOURTABLE = 4;
     final static int DOOR = 150;
     final static int COUNTER = 170;
-    final static int ONETABLE = 50;
+    final static int ONETABLE = 1;
 
     private String tableName="";
     private Map<String, Object> position = new HashMap<>();
     private boolean plug =false;
     private int capacity = 0;
+    private String orientation = "";
 
 
     TableInfo(){
@@ -44,13 +45,20 @@ public class TableInfo implements Serializable {
         position.put("first",pos1);
         position.put("second",pos2);
     }
-    public int getCapacity(){
+    int getCapacity(){
         return capacity;
+    }
+    public String getOrientation(){
+        return orientation;
+    }
+    public void setOrientation(String str){
+        this.orientation = str;
     }
 }
 
 class GridElement {
-    private int capacity;
+
+    private String orientation;
     private int status;
     private boolean plug;
     private String name;
@@ -62,7 +70,8 @@ class GridElement {
         this.name = null;
     }
 
-    void setInformation(int status, boolean plug, String name){
+    void setInformation(int status, boolean plug, String name, String orientation){
+        this.orientation = orientation;
         this.status = status;
         this.plug = plug;
         this.name = name;
@@ -77,7 +86,13 @@ class GridElement {
     public void setName(String name){this.name = name;}
     public String getName(){return this.name;}
 
+    public String getOrientation(){
+        return orientation;
+    }
 
+    public void setOrientation(String str){
+        this.orientation = str;
+    }
     boolean isPlug() {
         return plug;
     }

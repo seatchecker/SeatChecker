@@ -14,6 +14,7 @@ class Controller {
     private Context context;
     private ArrayList<TableInfo> TwoTables;
     private ArrayList<TableInfo> FourTables;
+    private ArrayList<TableInfo> OneTables;
     private ArrayList<TableInfo> ResultTables;
     private ArrayList<GridElement> arrays;
     private Cafe cafe;
@@ -22,6 +23,7 @@ class Controller {
     Controller(Context context, Cafe cafe){
         this.context = context;
         arrays = new ArrayList<>();
+        OneTables = new ArrayList<>();
         TwoTables = new ArrayList<>();
         FourTables = new ArrayList<>();
         ResultTables = new ArrayList<>();
@@ -42,14 +44,19 @@ class Controller {
 
         for(int i = 0; i<tables.size(); i++){
             TableInfo table = tables.get(i);
-            if(Integer.parseInt(table.getPosition().get("second").toString())== -1 ){
+            //if(Integer.parseInt(table.getPosition().get("second").toString())== -1 ){
+            if(table.getCapacity() == 1){
                 int first = Integer.parseInt(table.getPosition().get("first").toString());
-                arrays.get(first).setInformation(TableInfo.TWOTABLE,table.isPlug(),table.getTableName());
-            }else{
+                arrays.get(first).setInformation(TableInfo.ONETABLE,table.isPlug(),table.getTableName(),table.getOrientation());
+            }else if(table.getCapacity() == 2){
+                int first = Integer.parseInt(table.getPosition().get("first").toString());
+                arrays.get(first).setInformation(TableInfo.TWOTABLE,table.isPlug(),table.getTableName(),table.getOrientation());
+            }
+            else{
                 int first = Integer.parseInt(table.getPosition().get("first").toString());
                 int second = Integer.parseInt(table.getPosition().get("second").toString());
-                arrays.get(first).setInformation(TableInfo.FOURTABLE,table.isPlug(),table.getTableName());
-                arrays.get(second).setInformation(TableInfo.FOURTABLE,table.isPlug(),table.getTableName());
+                arrays.get(first).setInformation(TableInfo.FOURTABLE,table.isPlug(),table.getTableName(),table.getOrientation());
+                arrays.get(second).setInformation(TableInfo.FOURTABLE,table.isPlug(),table.getTableName(),table.getOrientation());
             }
         }
         int counterFirst = Integer.parseInt(cafe.getCounter().get("first").toString());
@@ -85,7 +92,7 @@ class Controller {
         for(int i = 0; i<width*length; i++){
             arrays.add(new GridElement());
             arrays.get(i).setName("");
-            //arrays.get(i).setPlug(false);
+            arrays.get(i).setPlug(false);
         }
         for(int i = 0; i<tables.size();i++){
             TableInfo curTable = tables.get(i);
@@ -93,14 +100,24 @@ class Controller {
             int pos1 = Integer.parseInt(curTable.getPosition().get("first").toString());
             int pos2 = Integer.parseInt(curTable.getPosition().get("second").toString());
 
-            if(pos2 == -1){
-                arrays.get(pos1).setStatus(TableInfo.TWOTABLE);
-                arrays.get(pos1).setPlug(curTable.isPlug());
+            if(curTable.getCapacity() == 1){
+                arrays.get(pos1).setInformation(TableInfo.ONETABLE,curTable.isPlug(),"",curTable.getOrientation());
+                if(curTable.isPlug()){
+                    arrays.get(pos1).setName("P");
+                }
+            }
+            else if(curTable.getCapacity() == 2){
+                arrays.get(pos1).setInformation(TableInfo.TWOTABLE,curTable.isPlug(),"",curTable.getOrientation());
+                if(curTable.isPlug()){
+                    arrays.get(pos1).setName("P");
+                }
             }else{
-                arrays.get(pos1).setStatus(TableInfo.FOURTABLE);
-                arrays.get(pos2).setStatus(TableInfo.FOURTABLE);
-                arrays.get(pos1).setPlug(curTable.isPlug());
-                arrays.get(pos2).setPlug(curTable.isPlug());
+                arrays.get(pos1).setInformation(TableInfo.FOURTABLE,curTable.isPlug(),"",curTable.getOrientation());
+                arrays.get(pos2).setInformation(TableInfo.FOURTABLE,curTable.isPlug(),"",curTable.getOrientation());
+                if(curTable.isPlug()){
+                    arrays.get(pos1).setName("P");
+                    arrays.get(pos2).setName("P");
+                }
             }
 
         }
@@ -128,6 +145,23 @@ class Controller {
         viewer.TablePlugGridViewer(listener,arrays,width,length);
     }
 
+    int addOneTable(int position){
+        if(arrays.get(position).getStatus() != TableInfo.NONE){
+            return -1;
+        }
+        TableInfo curTable = OneTables.get(0);
+        curTable.setPosition(position,-1);
+        ResultTables.add(curTable);
+
+        arrays.get(position).setInformation(TableInfo.ONETABLE,curTable.isPlug(),curTable.getTableName(),curTable.getOrientation());
+        viewer.updateGrid(position);
+
+        OneTables.remove(curTable);
+        if(OneTables.isEmpty()){
+            return 0;
+        }
+        return 1;
+    }
     int addTwoTable(int position){
         if(arrays.get(position).getStatus() != TableInfo.NONE) {
             return -1;
@@ -136,7 +170,7 @@ class Controller {
         curTable.setPosition(position,-1);
         ResultTables.add(curTable);
 
-        arrays.get(position).setInformation(TableInfo.TWOTABLE,curTable.isPlug(),curTable.getTableName());
+        arrays.get(position).setInformation(TableInfo.TWOTABLE,curTable.isPlug(),curTable.getTableName(),curTable.getOrientation());
         viewer.updateGrid(position);
 
         TwoTables.remove(curTable);
@@ -153,8 +187,8 @@ class Controller {
             curTable.setPosition(startPosition,endPosition);
             ResultTables.add(curTable);
 
-            arrays.get(startPosition).setInformation(TableInfo.FOURTABLE,curTable.isPlug(),curTable.getTableName());
-            arrays.get(endPosition).setInformation(TableInfo.FOURTABLE,curTable.isPlug(),curTable.getTableName());
+            arrays.get(startPosition).setInformation(TableInfo.FOURTABLE,curTable.isPlug(),curTable.getTableName(),curTable.getOrientation());
+            arrays.get(endPosition).setInformation(TableInfo.FOURTABLE,curTable.isPlug(),curTable.getTableName(),curTable.getOrientation());
 
             viewer.updateGrid(startPosition);
             viewer.updateGrid(endPosition);
@@ -170,30 +204,34 @@ class Controller {
     }
     synchronized int deleteTable(int position){
         if(arrays.get(position).getStatus() != TableInfo.TWOTABLE
-                && arrays.get(position).getStatus() != TableInfo.FOURTABLE)
+                && arrays.get(position).getStatus() != TableInfo.FOURTABLE
+                    && arrays.get(position).getStatus() != TableInfo.ONETABLE)
             return -1;
 
         for(int i = 0; i< ResultTables.size(); i++){
             TableInfo result = ResultTables.get(i);
             int first =Integer.parseInt(result.getPosition().get("first").toString());
             int second = Integer.parseInt(result.getPosition().get("second").toString());
+
             if( first== position || second == position){
-                if(second == -1){//if two tables
+                if(result.getCapacity() == 2){//if two tables
                     addTable(result,TwoTables);
-                    arrays.get(first).setStatus(TableInfo.NONE);
-                    arrays.get(first).setName("");
-                    arrays.get(first).setPlug(false);
+                    arrays.get(first).setInformation(TableInfo.NONE,false,"","");
                     ResultTables.remove(i);
                     viewer.updateGrid(first);
                     return 1;
-                }else {
+                }else if(result.getCapacity() == 1){
+                    addTable(result, OneTables);
+                    arrays.get(first).setInformation(TableInfo.NONE,false,"","");
+                    ResultTables.remove(i);
+                    viewer.updateGrid(first);
+                    return 0;
+                }
+                else {
                     addTable(result, FourTables);
-                    arrays.get(first).setStatus(TableInfo.NONE);
-                    arrays.get(first).setName("");
-                    arrays.get(first).setPlug(false);
-                    arrays.get(second).setStatus(TableInfo.NONE);
-                    arrays.get(second).setName("");
-                    arrays.get(second).setPlug(false);
+                    arrays.get(first).setInformation(TableInfo.NONE,false,"","");
+                    arrays.get(second).setInformation(TableInfo.NONE,false,"","");
+
                     ResultTables.remove(i);
                     viewer.updateGrid(first);
                     viewer.updateGrid(second);
@@ -219,7 +257,7 @@ class Controller {
 
 
     boolean isAllTableSettingComplete(){
-        return TwoTables.isEmpty() && FourTables.isEmpty();
+        return TwoTables.isEmpty() && FourTables.isEmpty() && OneTables.isEmpty();
     }
     ArrayList<TableInfo> getResultTable(){
         return this.ResultTables;
@@ -229,7 +267,9 @@ class Controller {
     synchronized void addPlug(int position){
 
         if(!arrays.get(position).isPlug()) {
-            if (arrays.get(position).getStatus() == TableInfo.TWOTABLE) {
+
+            if (arrays.get(position).getStatus() == TableInfo.TWOTABLE
+                    || arrays.get(position).getStatus() == TableInfo.ONETABLE) {
                 arrays.get(position).setPlug(true);
                 arrays.get(position).setName("P");
                 for (TableInfo table : ResultTables) {
@@ -258,7 +298,8 @@ class Controller {
                 }
             }
         }else{//if plugged
-            if (arrays.get(position).getStatus() == TableInfo.TWOTABLE) {
+            if (arrays.get(position).getStatus() == TableInfo.TWOTABLE
+                    ||arrays.get(position).getStatus() == TableInfo.ONETABLE) {
                 arrays.get(position).setPlug(false);
                 arrays.get(position).setName("");
                 for (TableInfo table : ResultTables) {
@@ -291,10 +332,52 @@ class Controller {
 
 
     boolean checkPositionChanged(int position){
-        if(arrays.get(position).getStatus() == TableInfo.TWOTABLE){
-
-        }else if(arrays.get(position).getStatus() == TableInfo.FOURTABLE){
-
+        if(arrays.get(position).getStatus() == TableInfo.ONETABLE){
+            for(TableInfo result : ResultTables){
+                int first =Integer.parseInt(result.getPosition().get("first").toString());
+                if(first == position){
+                    String orientation = result.getOrientation();
+                    String newori = "";
+                    switch(orientation){
+                        case "above" :
+                            newori = "right";
+                            break;
+                        case "right":
+                            newori = "below";
+                            break;
+                        case "below" :
+                            newori = "left";
+                            break;
+                        case "left":
+                            newori = "above";
+                            break;
+                    }
+                    result.setOrientation(newori);
+                    arrays.get(position).setOrientation(newori);
+                    viewer.updateGrid(position);
+                    return true;
+                }
+            }
+        }else if(arrays.get(position).getStatus() == TableInfo.TWOTABLE){
+            for(TableInfo result : ResultTables){
+                int first =Integer.parseInt(result.getPosition().get("first").toString());
+                if(first == position){
+                    String orientation = result.getOrientation();
+                    String newori = "";
+                    switch(orientation){
+                        case "above":
+                            newori=  "right";
+                            break;
+                        case "right":
+                            newori = "above";
+                            break;
+                    }
+                    result.setOrientation(newori);
+                    arrays.get(position).setOrientation(newori);
+                    viewer.updateGrid(position);
+                    return true;
+                }
+            }
         }
         return false;
     }

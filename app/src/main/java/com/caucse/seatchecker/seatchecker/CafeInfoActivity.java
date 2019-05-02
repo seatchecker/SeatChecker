@@ -98,8 +98,8 @@ public class CafeInfoActivity extends AppCompatActivity implements OnMapReadyCal
         String latitude = splitStr[10].substring(splitStr[10].indexOf("=")+1);
         String longitude = splitStr[12].substring(splitStr[12].indexOf("=")+1);
 
-        //LatLng CAFE = new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude));
-        LatLng CAFE = new LatLng(37.56, 126.97);
+        LatLng CAFE = new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude));
+        //LatLng CAFE = new LatLng(37.56, 126.97);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(CAFE);
         markerOptions.title(curCafe.getName());
@@ -107,7 +107,7 @@ public class CafeInfoActivity extends AppCompatActivity implements OnMapReadyCal
 
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(CAFE));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(18));
 
     }
 }

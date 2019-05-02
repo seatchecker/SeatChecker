@@ -66,20 +66,47 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        String str = arrays.get(position).getOrientation();
         switch(arrays.get(position).getStatus()){
             case TableInfo.COUNTER :
             case TableInfo.DOOR :
                 holder.layout.setBackgroundColor(context.getResources().getColor(R.color.doorColor));
                 break;
+            case TableInfo.ONETABLE:
+
+                switch (str) {
+                    case "above":
+                        holder.tvPlug.setBackground(context.getResources().getDrawable(R.drawable.above1));
+                        break;
+                    case "below":
+                        holder.tvPlug.setBackground(context.getResources().getDrawable(R.drawable.below1));
+                        break;
+                    case "right":
+                        holder.tvPlug.setBackground(context.getResources().getDrawable(R.drawable.right1));
+                        break;
+                    case "left":
+                        holder.tvPlug.setBackground(context.getResources().getDrawable(R.drawable.left1));
+                        break;
+                }
+                break;
             case TableInfo.FOURTABLE:
-                holder.layout.setBackgroundColor(context.getResources().getColor(R.color.fourTable));
+                if(arrays.get(position-1).getStatus() == TableInfo.FOURTABLE
+                        ||arrays.get(position+1).getStatus() == TableInfo.FOURTABLE){
+                    holder.tvPlug.setBackground(context.getResources().getDrawable(R.drawable.above4));
+                }else{
+                    holder.tvPlug.setBackground(context.getResources().getDrawable(R.drawable.right4));
+                }
                 break;
             case TableInfo.TWOTABLE :
-                holder.layout.setBackgroundColor(context.getResources().getColor(R.color.twoTable));
+                if(str.equals("right")){
+                    holder.tvPlug.setBackground(context.getResources().getDrawable(R.drawable.right2));
+                }else{
+                    holder.tvPlug.setBackground(context.getResources().getDrawable(R.drawable.above2));
+                }
                 break;
             case TableInfo.NONE :
                 holder.layout.setBackgroundColor(context.getResources().getColor(R.color.white));
+                holder.tvPlug.setBackgroundResource(R.color.emptyTable);
         }
         holder.tvPlug.setText(arrays.get(position).getName());
 

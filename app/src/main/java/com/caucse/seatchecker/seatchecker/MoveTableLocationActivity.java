@@ -31,9 +31,10 @@ public class MoveTableLocationActivity extends AppCompatActivity implements Grid
         radioGroup = findViewById(R.id.radio);
         btnNextPage = findViewById(R.id.btnNextPage);
         //abtnCancelJob = findViewById(R.id.btnCancelJob);
-        ((RadioButton)radioGroup.getChildAt(2)).setChecked(true);
+        ((RadioButton)radioGroup.getChildAt(3)).setChecked(true);
         radioGroup.getChildAt(0).setClickable(false);
         radioGroup.getChildAt(1).setClickable(false);
+        radioGroup.getChildAt(2).setClickable(false);
 
 
         controller = new Controller(this,cafe);
@@ -62,35 +63,60 @@ public class MoveTableLocationActivity extends AppCompatActivity implements Grid
     @Override
     public void onItemClick(View view, int position) {
 
-        if(controller.checkPositionChanged(position)){
-            return;
-        }
+
         int name = radioGroup.getCheckedRadioButtonId();
         RadioButton button = findViewById(name);
         int idx = radioGroup.indexOfChild(button);
+
+        if(idx ==4 ){
+            controller.checkPositionChanged(position);
+            return;
+        }
         switch(idx){
             case 0 :
-                switch(controller.addTwoTable(position)){
+                switch(controller.addOneTable(position)){
                     case -1 : Toast.makeText(this,"해당 좌석에 테이블을 추가할 수 없습니다.",Toast.LENGTH_SHORT).show();
-                    break;
+                        break;
                     case 0 :
                         radioGroup.getChildAt(0).setClickable(false);
                         if(radioGroup.getChildAt(1).isClickable()) {
                             ((RadioButton) radioGroup.getChildAt(1)).setChecked(true);
-                        }else{
+                        }else if(radioGroup.getChildAt(2).isClickable()){
                             ((RadioButton) radioGroup.getChildAt(2)).setChecked(true);
+                        }else{
+                            ((RadioButton) radioGroup.getChildAt(3)).setChecked(true);
+                        }
+                        break;
+                }
+                break;
+            case 1 :
+                switch(controller.addTwoTable(position)){
+                    case -1 : Toast.makeText(this,"해당 좌석에 테이블을 추가할 수 없습니다.",Toast.LENGTH_SHORT).show();
+                    break;
+                    case 0 :
+                        radioGroup.getChildAt(1).setClickable(false);
+                        if(radioGroup.getChildAt(2).isClickable()) {
+                            ((RadioButton) radioGroup.getChildAt(2)).setChecked(true);
+                        }else{
+                            ((RadioButton) radioGroup.getChildAt(3)).setChecked(true);
                         }
                     break;
                 }
                 break;
             case 2:
+
+            case 3:
                 switch(controller.deleteTable(position)){
                     case -1 :
                         Toast.makeText(this, "삭제할 테이블이 없습니다", Toast.LENGTH_SHORT).show();
                         break;
-                    case 1 : radioGroup.getChildAt(0).setClickable(true);
+                    case 0:
+                        radioGroup.getChildAt(0).setClickable(true);
                         break;
-                    case 2 : radioGroup.getChildAt(1).setClickable(true);
+                    case 1 : radioGroup.getChildAt(1).setClickable(true);
+                        break;
+                    case 2 : radioGroup.getChildAt(2).setClickable(true);
+                        break;
                 }
                 break;
             default:
@@ -104,7 +130,7 @@ public class MoveTableLocationActivity extends AppCompatActivity implements Grid
         RadioButton button = findViewById(name);
         int idx = radioGroup.indexOfChild(button);
         int width = Integer.parseInt(cafe.getGrid().get("width").toString());
-        if(idx != 1){
+        if(idx != 2){
             return;
         }
         if(Math.abs(startPosition -endPosition) != 1 && Math.abs(startPosition-endPosition) != width){
@@ -116,11 +142,14 @@ public class MoveTableLocationActivity extends AppCompatActivity implements Grid
                 Toast.makeText(this,"해당 좌석에 테이블을 추가할 수 없습니다.",Toast.LENGTH_SHORT).show();
                 break;
             case 0 :
-                radioGroup.getChildAt(1).setClickable(false);
+                radioGroup.getChildAt(2).setClickable(false);
                 if(radioGroup.getChildAt(0).isClickable()) {
                     ((RadioButton) radioGroup.getChildAt(0)).setChecked(true);
-                }else{
-                    ((RadioButton) radioGroup.getChildAt(2)).setChecked(true);
+                }else if(radioGroup.getChildAt(1).isClickable()){
+                    ((RadioButton) radioGroup.getChildAt(1)).setChecked(true);
+                }
+                else{
+                    ((RadioButton) radioGroup.getChildAt(3)).setChecked(true);
                 }
                 break;
         }
