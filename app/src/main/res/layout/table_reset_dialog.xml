@@ -11,7 +11,7 @@
         android:textStyle="bold"
         android:textSize="20sp"
         android:layout_margin="10dp"
-        android:text="좌석 변동을 하기 위해서는 모든 테이블 정보를 초기화 합니다. 좌석 변동을 수행하시겠습니까?"/>
+        android:text="카페의 좌석을 수정하시겠습니까?"/>
 
 
     <LinearLayout

@@ -11,10 +11,12 @@ public class TableInfo implements Serializable {
     final static int FOURTABLE = 200;
     final static int DOOR = 150;
     final static int COUNTER = 170;
+    final static int ONETABLE = 50;
 
     private String tableName="";
     private Map<String, Object> position = new HashMap<>();
     private boolean plug =false;
+    private int capacity = 0;
 
 
     TableInfo(){
@@ -30,7 +32,7 @@ public class TableInfo implements Serializable {
         return position;
     }
 
-    public boolean isPlug() {
+    boolean isPlug() {
         return plug;
     }
 
@@ -42,9 +44,13 @@ public class TableInfo implements Serializable {
         position.put("first",pos1);
         position.put("second",pos2);
     }
+    public int getCapacity(){
+        return capacity;
+    }
 }
 
 class GridElement {
+    private int capacity;
     private int status;
     private boolean plug;
     private String name;
@@ -54,6 +60,12 @@ class GridElement {
         this.status = TableInfo.NONE;
         this.plug = false;
         this.name = null;
+    }
+
+    void setInformation(int status, boolean plug, String name){
+        this.status = status;
+        this.plug = plug;
+        this.name = name;
     }
     int getStatus() {
         return status;

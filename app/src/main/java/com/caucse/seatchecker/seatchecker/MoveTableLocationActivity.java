@@ -31,7 +31,10 @@ public class MoveTableLocationActivity extends AppCompatActivity implements Grid
         radioGroup = findViewById(R.id.radio);
         btnNextPage = findViewById(R.id.btnNextPage);
         //abtnCancelJob = findViewById(R.id.btnCancelJob);
-        ((RadioButton)radioGroup.getChildAt(0)).setChecked(true);
+        ((RadioButton)radioGroup.getChildAt(2)).setChecked(true);
+        radioGroup.getChildAt(0).setClickable(false);
+        radioGroup.getChildAt(1).setClickable(false);
+
 
         controller = new Controller(this,cafe);
         controller.initTableGridView(this,tables);
@@ -59,6 +62,9 @@ public class MoveTableLocationActivity extends AppCompatActivity implements Grid
     @Override
     public void onItemClick(View view, int position) {
 
+        if(controller.checkPositionChanged(position)){
+            return;
+        }
         int name = radioGroup.getCheckedRadioButtonId();
         RadioButton button = findViewById(name);
         int idx = radioGroup.indexOfChild(button);

@@ -33,7 +33,9 @@ class Controller {
         int width = Integer.parseInt(cafe.getGrid().get("width").toString());
         int length =  Integer.parseInt(cafe.getGrid().get("length").toString());
 
-        arrays = new ArrayList<>();
+        ResultTables.addAll(tables);
+        //arrays = new ArrayList<>();
+
         for(int i = 0; i<width*length; i++){
             arrays.add(new GridElement());
         }
@@ -41,9 +43,13 @@ class Controller {
         for(int i = 0; i<tables.size(); i++){
             TableInfo table = tables.get(i);
             if(Integer.parseInt(table.getPosition().get("second").toString())== -1 ){
-                TwoTables.add(table);
+                int first = Integer.parseInt(table.getPosition().get("first").toString());
+                arrays.get(first).setInformation(TableInfo.TWOTABLE,table.isPlug(),table.getTableName());
             }else{
-                FourTables.add(table);
+                int first = Integer.parseInt(table.getPosition().get("first").toString());
+                int second = Integer.parseInt(table.getPosition().get("second").toString());
+                arrays.get(first).setInformation(TableInfo.FOURTABLE,table.isPlug(),table.getTableName());
+                arrays.get(second).setInformation(TableInfo.FOURTABLE,table.isPlug(),table.getTableName());
             }
         }
         int counterFirst = Integer.parseInt(cafe.getCounter().get("first").toString());
@@ -79,18 +85,22 @@ class Controller {
         for(int i = 0; i<width*length; i++){
             arrays.add(new GridElement());
             arrays.get(i).setName("");
-            arrays.get(i).setPlug(false);
+            //arrays.get(i).setPlug(false);
         }
         for(int i = 0; i<tables.size();i++){
             TableInfo curTable = tables.get(i);
+
             int pos1 = Integer.parseInt(curTable.getPosition().get("first").toString());
             int pos2 = Integer.parseInt(curTable.getPosition().get("second").toString());
 
             if(pos2 == -1){
                 arrays.get(pos1).setStatus(TableInfo.TWOTABLE);
+                arrays.get(pos1).setPlug(curTable.isPlug());
             }else{
                 arrays.get(pos1).setStatus(TableInfo.FOURTABLE);
                 arrays.get(pos2).setStatus(TableInfo.FOURTABLE);
+                arrays.get(pos1).setPlug(curTable.isPlug());
+                arrays.get(pos2).setPlug(curTable.isPlug());
             }
 
         }
@@ -126,8 +136,7 @@ class Controller {
         curTable.setPosition(position,-1);
         ResultTables.add(curTable);
 
-        arrays.get(position).setStatus(TableInfo.TWOTABLE);
-        arrays.get(position).setName(curTable.getTableName());
+        arrays.get(position).setInformation(TableInfo.TWOTABLE,curTable.isPlug(),curTable.getTableName());
         viewer.updateGrid(position);
 
         TwoTables.remove(curTable);
@@ -144,10 +153,9 @@ class Controller {
             curTable.setPosition(startPosition,endPosition);
             ResultTables.add(curTable);
 
-            arrays.get(startPosition).setStatus(TableInfo.FOURTABLE);
-            arrays.get(endPosition).setStatus(TableInfo.FOURTABLE);
-            arrays.get(startPosition).setName(curTable.getTableName());
-            arrays.get(endPosition).setName(curTable.getTableName());
+            arrays.get(startPosition).setInformation(TableInfo.FOURTABLE,curTable.isPlug(),curTable.getTableName());
+            arrays.get(endPosition).setInformation(TableInfo.FOURTABLE,curTable.isPlug(),curTable.getTableName());
+
             viewer.updateGrid(startPosition);
             viewer.updateGrid(endPosition);
 
@@ -174,6 +182,7 @@ class Controller {
                     addTable(result,TwoTables);
                     arrays.get(first).setStatus(TableInfo.NONE);
                     arrays.get(first).setName("");
+                    arrays.get(first).setPlug(false);
                     ResultTables.remove(i);
                     viewer.updateGrid(first);
                     return 1;
@@ -181,8 +190,10 @@ class Controller {
                     addTable(result, FourTables);
                     arrays.get(first).setStatus(TableInfo.NONE);
                     arrays.get(first).setName("");
+                    arrays.get(first).setPlug(false);
                     arrays.get(second).setStatus(TableInfo.NONE);
                     arrays.get(second).setName("");
+                    arrays.get(second).setPlug(false);
                     ResultTables.remove(i);
                     viewer.updateGrid(first);
                     viewer.updateGrid(second);
@@ -277,6 +288,17 @@ class Controller {
             }
         }
     }
+
+
+    boolean checkPositionChanged(int position){
+        if(arrays.get(position).getStatus() == TableInfo.TWOTABLE){
+
+        }else if(arrays.get(position).getStatus() == TableInfo.FOURTABLE){
+
+        }
+        return false;
+    }
+
 }
 
 

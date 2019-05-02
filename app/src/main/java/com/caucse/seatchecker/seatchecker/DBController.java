@@ -1,10 +1,13 @@
 package com.caucse.seatchecker.seatchecker;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -18,7 +21,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static android.support.constraint.Constraints.TAG;
@@ -46,6 +51,7 @@ class DBController  {
 
     void getCafeInfo(){
         final ProgressDialog progressDialog = new ProgressDialog(view.getContext());
+        progressDialog.setMessage("카페의 정보를 불러오는중입니다. 잠시만 기다려주세요");
         progressDialog.show();
 
         final FirebaseStorage fs = FirebaseStorage.getInstance();
@@ -80,8 +86,6 @@ class DBController  {
         });
     }
 
-
-
     void getTableInfo(final Cafe cafe){
         final ProgressDialog progressDialog = new ProgressDialog(view.getContext());
         progressDialog.show();
@@ -115,6 +119,28 @@ class DBController  {
             }
         });
 
+    }
+
+    void saveChangedDataToFireStore(Cafe cafe, ArrayList<TableInfo> tables){
+        final ProgressDialog progressDialog = new ProgressDialog(view.getContext());
+        progressDialog.setMessage("변경 사항을 저장하는 중입니다. 잠시만 기다려주세요");
+        progressDialog.show();
+
+
+        final FirebaseStorage fs = FirebaseStorage.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        CollectionReference dbTables = db.collection("cafeinfo").document(cafe.getDid()).collection("table");
+
+        for(TableInfo table : tables){
+            dbTables.document(table.getTableName()).set(table);
+        }
+
+        progressDialog.dismiss();
+
+        Context context = view.getContext();
+        ((Activity)context).finish();
+        Toast.makeText(view.getContext(), "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();
     }
 }
 
