@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -13,6 +14,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,12 +45,13 @@ class DBController  {
     private ArrayList<TableInfo> tables;
     private String databaseHash ;
     private String inputPassword;
+    static final int MODE_MOVE_TABLE = 2;
+    static final int MODE_CHECK_TABLE = 1;
 
 
     View view;
 
     DBController(View view) {
-
         cafes = new ArrayList<>();
         tables = new ArrayList<>();
         this.view = view;
@@ -86,7 +95,7 @@ class DBController  {
         });
     }
 
-    void getTableInfo(final Cafe cafe){
+    void getTableInfo(final Cafe cafe,final int mode){
         final ProgressDialog progressDialog = new ProgressDialog(view.getContext());
         progressDialog.show();
 
@@ -105,11 +114,22 @@ class DBController  {
                     Log.d(TAG, "onSuccess: " + cafes);
                     progressDialog.dismiss();
 
+                    switch(mode){
+                        case MODE_MOVE_TABLE :
+                            Intent intent = new Intent(view.getContext(),MoveTableLocationActivity.class);
+                            intent.putExtra("CAFE",cafe);
+                            intent.putExtra("TABLE",tables);
+                            view.getContext().startActivity(intent);
+                            break;
+                        case MODE_CHECK_TABLE :
 
-                    Intent intent = new Intent(view.getContext(),MoveTableLocationActivity.class);
-                    intent.putExtra("CAFE",cafe);
-                    intent.putExtra("TABLE",tables);
-                    view.getContext().startActivity(intent);
+                            Intent check_table_intent = new Intent(view.getContext(),SeatCheckActivity.class);
+                            check_table_intent.putExtra("CAFE",cafe);
+                            check_table_intent.putExtra("TABLE",tables);
+                            view.getContext().startActivity(check_table_intent);
+                            break;
+                    }
+
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -141,6 +161,30 @@ class DBController  {
         Context context = view.getContext();
         ((Activity)context).finish();
         Toast.makeText(view.getContext(), "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+    }
+
+    void getSeatStatus(Cafe cafe){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(cafe.getDid());
+
+        Query tableInformation = reference.orderByValue();
+       reference.addListenerForSingleValueEvent(new ValueEventListener() {
+           @Override
+           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+              for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                  SeatStatus seat = snapshot.getValue(SeatStatus.class);
+                  assert seat != null;
+                  seat.setName(snapshot.getKey());
+              }
+
+
+              SeatStatus status = dataSnapshot.getValue(SeatStatus.class);
+           }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError databaseError) {
+
+           }
+       });
     }
 }
 

@@ -28,7 +28,7 @@ import java.util.List;
 
 public class CafeInfoActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private Button btnManager;
+    private Button btnManager,btnSeatCheck;
     private TextView tvNameOfCafe;
     private Cafe curCafe;
     private ImageView ivCafeImage;
@@ -36,11 +36,13 @@ public class CafeInfoActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cafe_info);
+        final View view = getLayoutInflater().from(this).inflate(R.layout.activity_cafe_info,null);
+        setContentView(view);
 
         Intent intent = getIntent();
         final String name = intent.getStringExtra("name");
         btnManager= findViewById(R.id.btnManager);
+        btnSeatCheck = findViewById(R.id.btnSeatCheck);
         tvNameOfCafe = findViewById(R.id.tvNameOfCafe);
         ivCafeImage = findViewById(R.id.ivCafeImage);
         tvCafeLocation = findViewById(R.id.tvCafeLocation);
@@ -66,11 +68,18 @@ public class CafeInfoActivity extends AppCompatActivity implements OnMapReadyCal
             }
         });
 
+
+        btnSeatCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBController dbController = new DBController(view);
+                dbController.getTableInfo(curCafe,DBController.MODE_CHECK_TABLE);
+            }
+        });
     }
 
     void setImage(Cafe curCafe) {
         FirebaseStorage fs = FirebaseStorage.getInstance();
-        //Glide.with(context).load(cafe.getStorage()).into(ivPicture);
         try {
             StorageReference reference = fs.getReference().child(curCafe.getImageURL());
             Glide.with(this).load(reference).into(ivCafeImage);
@@ -99,7 +108,6 @@ public class CafeInfoActivity extends AppCompatActivity implements OnMapReadyCal
         String longitude = splitStr[12].substring(splitStr[12].indexOf("=")+1);
 
         LatLng CAFE = new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude));
-        //LatLng CAFE = new LatLng(37.56, 126.97);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(CAFE);
         markerOptions.title(curCafe.getName());

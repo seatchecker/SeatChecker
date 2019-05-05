@@ -92,7 +92,7 @@ class CustomDialog {
             public void onClick(View v) {
 
                 DBController dbController = new DBController(view);
-                dbController.getTableInfo(cafe);
+                dbController.getTableInfo(cafe,DBController.MODE_MOVE_TABLE);
                 dialog.dismiss();
             }
         });

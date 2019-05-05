@@ -13,4 +13,12 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textStyle="bold"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/ivStatusOfSeat"
+        android:layout_gravity="center"
+        android:scaleType="fitXY"
+        />
 </FrameLayout>

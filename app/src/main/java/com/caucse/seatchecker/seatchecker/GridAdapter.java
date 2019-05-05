@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
+        ImageView ivStatus;
         protected TextView tvPlug;
         public FrameLayout layout;
 
@@ -40,6 +42,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
             tvPlug = itemView.findViewById(R.id.tvPlug);
             layout = itemView.findViewById(R.id.holderFrame);
             tvPlug.setOnClickListener(this);
+            ivStatus = itemView.findViewById(R.id.ivStatusOfSeat);
         }
 
         @Override
@@ -54,7 +57,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.grid_item, parent, false);
         GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) view.getLayoutParams();
-        //todo : change setting, size of gridview
         params.width = parent.getMeasuredWidth() / width;
         params.height = parent.getMeasuredWidth() / length;
 
@@ -109,7 +111,9 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
                 holder.tvPlug.setBackgroundResource(R.color.emptyTable);
         }
         holder.tvPlug.setText(arrays.get(position).getName());
-
+        if(!arrays.get(position).isEmptySeat()){
+            holder.ivStatus.setBackground(context.getResources().getDrawable(R.drawable.cancel_image));
+        }
     }
 
     @Override
@@ -125,7 +129,5 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
     public void setItem(ArrayList<GridElement> info){
         this.arrays = info;
     }
-
-
 
 }

@@ -1,5 +1,7 @@
 package com.caucse.seatchecker.seatchecker;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,11 +20,17 @@ public class TableInfo implements Serializable {
     private boolean plug =false;
     private int capacity = 0;
     private String orientation = "";
+    private boolean isEmptySeat;
 
 
     TableInfo(){
         position.put("first",0);
         position.put("second",0);
+        isEmptySeat = true;
+    }
+
+    private boolean isEmptySeat(){
+        return this.isEmptySeat;
     }
 
     String getTableName() {
@@ -60,6 +68,7 @@ class GridElement {
 
     private String orientation;
     private int status;
+    private boolean isEmptySeat;
     private boolean plug;
     private String name;
 
@@ -68,6 +77,7 @@ class GridElement {
         this.status = TableInfo.NONE;
         this.plug = false;
         this.name = null;
+        this.isEmptySeat = true;
     }
 
     void setInformation(int status, boolean plug, String name, String orientation){
@@ -75,6 +85,13 @@ class GridElement {
         this.status = status;
         this.plug = plug;
         this.name = name;
+    }
+
+    void changeStatusOfSeat(boolean isEmptySeat){
+        this.isEmptySeat = isEmptySeat;
+    }
+    boolean isEmptySeat(){
+        return this.isEmptySeat;
     }
     int getStatus() {
         return status;
@@ -101,4 +118,29 @@ class GridElement {
         this.plug = plug;
     }
 
+}
+
+@IgnoreExtraProperties
+class SeatStatus{
+
+    private String seatName = "";
+    private int tableno = 0;
+    private String tag = "";
+
+    //default cons
+    SeatStatus(){}
+
+    public String getSeatName() {
+        return seatName;
+    }
+    public int getTableno() {
+        return tableno;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+    public void setName(String seatName){
+        this.seatName = seatName;
+    }
 }
