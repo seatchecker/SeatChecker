@@ -334,6 +334,56 @@ class Controller {
 
 
 
+    boolean checkPositionChanged(int position){
+        if(arrays.get(position).getStatus() == TableInfo.ONETABLE){
+            for(TableInfo result : ResultTables){
+                int first =Integer.parseInt(result.getPosition().get("first").toString());
+                if(first == position){
+                    String orientation = result.getOrientation();
+                    String newori = "";
+                    switch(orientation){
+                        case "above" :
+                            newori = "right";
+                            break;
+                        case "right":
+                            newori = "below";
+                            break;
+                        case "below" :
+                            newori = "left";
+                            break;
+                        case "left":
+                            newori = "above";
+                            break;
+                    }
+                    result.setOrientation(newori);
+                    arrays.get(position).setOrientation(newori);
+                    viewer.updateGrid(position);
+                    return true;
+                }
+            }
+        }else if(arrays.get(position).getStatus() == TableInfo.TWOTABLE){
+            for(TableInfo result : ResultTables){
+                int first =Integer.parseInt(result.getPosition().get("first").toString());
+                if(first == position){
+                    String orientation = result.getOrientation();
+                    String newori = "";
+                    switch(orientation){
+                        case "above":
+                            newori=  "right";
+                            break;
+                        case "right":
+                            newori = "above";
+                            break;
+                    }
+                    result.setOrientation(newori);
+                    arrays.get(position).setOrientation(newori);
+                    viewer.updateGrid(position);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }
 
