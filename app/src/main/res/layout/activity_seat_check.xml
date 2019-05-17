@@ -28,7 +28,8 @@
             android:layout_gravity="right"
             android:background="@drawable/alarm_off"
             android:layout_marginEnd="5dp"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="5dp"
+            android:tag="alarm_off.jpg"/>
     </FrameLayout>
 
 

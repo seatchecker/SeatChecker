@@ -25,13 +25,7 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
         refreshedToken = FirebaseInstanceId.getInstance().getInstanceId().getResult().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
 
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-        String androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(androidId);
-
-        pushInformation my =new pushInformation(refreshedToken,0,false,"");
-        new pushInformation(refreshedToken,0,false,"");
     }
     /**
      * Called when message is received.

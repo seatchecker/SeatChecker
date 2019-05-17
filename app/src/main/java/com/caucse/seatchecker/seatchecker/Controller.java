@@ -467,7 +467,6 @@ class Controller {
             }else{
                 tableIsEmpty = false;
             }
-
             //if data was changed,
             if(arrays.get(first).isEmptySeat() != tableIsEmpty){
                 if(arrays.get(first).isEmptySeat()){
@@ -475,15 +474,15 @@ class Controller {
                 }else{
                     reference.child(table.getTableName()).child("tag").setValue("USEDTABLE");
                 }
-
             }
-
         }
 
         progressDialog.dismiss();
         Toast.makeText(context, "변경사항이 저장되었습니다.", Toast.LENGTH_SHORT).show();
         ((Activity)context).finish();
     }
+
+
 }
 
 

@@ -22,6 +22,7 @@ import java.util.List;
 
 public class SeatCheckActivity extends AppCompatActivity implements GridAdapter.GridItemListener{
 
+    private Button btnAlarmSet;
     private Controller controller;
     private TextView ivCafeName;
     private ArrayList<TableInfo> tableInfoList;
@@ -29,7 +30,7 @@ public class SeatCheckActivity extends AppCompatActivity implements GridAdapter.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View view = getLayoutInflater().from(this).inflate(R.layout.activity_seat_check, null);
+        final View view = getLayoutInflater().from(this).inflate(R.layout.activity_seat_check, null);
         setContentView(view);
 
         Intent intent = getIntent();
@@ -37,6 +38,7 @@ public class SeatCheckActivity extends AppCompatActivity implements GridAdapter.
         tableInfoList = (ArrayList<TableInfo>) intent.getSerializableExtra("TABLE");
         //get information of tables
 
+        btnAlarmSet = findViewById(R.id.btnSetAlarm);
         ivCafeName = findViewById(R.id.tvNameOfCafe);
         ivCafeName.setText(cafe.getName());
 
@@ -44,6 +46,26 @@ public class SeatCheckActivity extends AppCompatActivity implements GridAdapter.
         controller.initTableGridView(this, tableInfoList);
         controller.setPlugInformation(tableInfoList);
 
+
+        btnAlarmSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tag = (String)btnAlarmSet.getTag();
+                if(tag.equals("alarm_off.jpg")){
+                    String androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+                    CustomDialog alarmdialog = new CustomDialog(v);
+                    alarmdialog.callAlarmSettingDialog(cafe, androidId,btnAlarmSet);
+                    return;
+                }else{
+                    btnAlarmSet.setBackground(view.getResources().getDrawable(R.drawable.alarm_off));
+                    btnAlarmSet.setTag("alarm_off.jpg");
+                    DBController dbController = new DBController(v);
+                    String androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+                    dbController.removeAlarmSetting(cafe.getDid(),androidId);
+                    Toast.makeText(SeatCheckActivity.this, "알림을 해제하였습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         //get data from firebase(real time)
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -58,7 +80,6 @@ public class SeatCheckActivity extends AppCompatActivity implements GridAdapter.
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Toast.makeText(SeatCheckActivity.this, "좌석 정보가 변경되었습니다. 좌석을 확인해주세요", Toast.LENGTH_SHORT).show();
                 for (TableInfo tableInfo : tableInfoList) {
                     String key = dataSnapshot.getKey();
                     if (tableInfo.getTableName().equals(key)) {

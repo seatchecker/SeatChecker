@@ -159,13 +159,11 @@ class pushInformation{
     String token = "";
     int numOfTable = 0;
     boolean isPlug = false;
-    String location ="";
 
-    pushInformation(String token, int numOfTable, boolean isPlug, String location){
+    pushInformation(String token, int numOfTable, boolean isPlug){
         this.token = token;
         this.numOfTable = numOfTable;
         this.isPlug = isPlug;
-        this.location = location;
     }
     public String getToken() {
         return token;
@@ -179,7 +177,4 @@ class pushInformation{
         return isPlug;
     }
 
-    public String getLocation() {
-        return location;
-    }
 }

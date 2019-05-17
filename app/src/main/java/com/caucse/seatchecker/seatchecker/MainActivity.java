@@ -29,18 +29,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent intent = new Intent(this,FirebaseInstanceIDService.class);
-        startService(intent);
-
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-        String androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("ediya").child("push").child(androidId);
-
-        pushInformation my =new pushInformation(FirebaseInstanceId.getInstance().getToken(),0,false,"");
-        new pushInformation(FirebaseInstanceId.getInstance().getToken(),0,false,"");
-        reference.setValue(my);
-        Log.d("SHOWMETHETOKEN", "token "+ FirebaseInstanceId.getInstance().getToken());
         // Initializing the TabLayout
         tabLayout =  findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("카페 검색하기"));

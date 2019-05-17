@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +33,61 @@ class CustomDialog {
         customDialog = this;
     }
 
+
+    void callAlarmSettingDialog(final Cafe cafe, final String androidId, final Button button){
+        this.cafe = cafe;
+        dialog = new Dialog(context);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.alarm_dialog);
+        dialog.show();
+        final RadioGroup rbTable = dialog.findViewById(R.id.rbTableSelect);
+        ((RadioButton) rbTable.getChildAt(0)).setChecked(true);
+
+        final CheckBox cbPlug = dialog.findViewById(R.id.cbPlugSetting);
+        final Button btnOK = dialog.findViewById(R.id.btnOK);
+        Button btnCancel = dialog.findViewById(R.id.btnCancel);
+
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int tablenum = 0;
+                boolean isplug = false;
+                DBController dbController = new DBController(btnOK.getRootView());
+                int radioButtonID = rbTable.getCheckedRadioButtonId();
+                View rbButton = rbTable.findViewById(radioButtonID);
+                switch(rbTable.indexOfChild(rbButton)){
+                    case 0 :
+                        tablenum = 1;
+                        break;
+                    case 1 :
+                        tablenum = 2;
+                        break;
+                    case 2 :
+                        tablenum = 4;
+                        break;
+                }
+
+                if(cbPlug.isChecked()){
+                    isplug = true;
+                }else{
+                    isplug = false;
+                }
+                dbController.addAlarmSetting(cafe.getDid(), androidId, tablenum, isplug);
+                button.setBackground(v.getResources().getDrawable(R.drawable.alarm_on));
+                button.setTag("alarm_on.jpg");
+                dialog.dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        //todo : set buttons, and call LOCALDB & REALDB AND SAVE!!
+    }
 
     void callManagerPasswordDialog(final Cafe cafe){
         this.cafe = cafe;

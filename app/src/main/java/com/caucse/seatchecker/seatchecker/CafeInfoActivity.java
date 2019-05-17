@@ -43,6 +43,7 @@ public class CafeInfoActivity extends AppCompatActivity implements OnMapReadyCal
         final String name = intent.getStringExtra("name");
         btnManager= findViewById(R.id.btnManager);
         btnSeatCheck = findViewById(R.id.btnSeatCheck);
+
         tvNameOfCafe = findViewById(R.id.tvNameOfCafe);
         ivCafeImage = findViewById(R.id.ivCafeImage);
         tvCafeLocation = findViewById(R.id.tvCafeLocation);
@@ -55,6 +56,7 @@ public class CafeInfoActivity extends AppCompatActivity implements OnMapReadyCal
         FragmentManager fragmentManager = getFragmentManager();
         MapFragment mapFragment = (MapFragment)fragmentManager.findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
 
 
         setImage(curCafe);

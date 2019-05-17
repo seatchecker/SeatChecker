@@ -26,6 +26,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
@@ -208,6 +209,21 @@ class DBController  {
 
            }
        });
+    }
+
+    void removeAlarmSetting(String cafeName, String deviceID){
+        //remove firebase data
+        FirebaseDatabase.getInstance().getReference().child(cafeName).child("push").child(deviceID).removeValue();
+
+        //todo : remove firestore data
+    }
+
+    void addAlarmSetting(String cafeName, String deviceID, int tableNum, boolean isplug){
+
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(cafeName).child("push").child(deviceID);
+        pushInformation my =new pushInformation(FirebaseInstanceId.getInstance().getToken(),tableNum,isplug);
+        reference.setValue(my);
+        //todo : save at realm database
     }
 }
 
