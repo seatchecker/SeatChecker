@@ -21,9 +21,12 @@ public class TableInfo implements Serializable {
     private int capacity = 0;
     private String orientation = "";
     private boolean isEmptySeat;
+    private String tag = "";
+
 
 
     TableInfo(){
+        tag="empty";
         position.put("first",0);
         position.put("second",0);
         isEmptySeat = true;
@@ -37,6 +40,9 @@ public class TableInfo implements Serializable {
         return tableName;
     }
 
+    String getTag(){
+        return tag;
+    }
     Map<String, Object> getPosition() {
         return position;
     }
@@ -49,6 +55,9 @@ public class TableInfo implements Serializable {
         this.plug = plug;
     }
 
+    void setTag(String tag){
+        this.tag = tag;
+    }
     void setPosition(int pos1, int pos2){
         position.put("first",pos1);
         position.put("second",pos2);
@@ -142,5 +151,35 @@ class SeatStatus{
     }
     public void setName(String seatName){
         this.seatName = seatName;
+    }
+}
+
+@IgnoreExtraProperties
+class pushInformation{
+    String token = "";
+    int numOfTable = 0;
+    boolean isPlug = false;
+    String location ="";
+
+    pushInformation(String token, int numOfTable, boolean isPlug, String location){
+        this.token = token;
+        this.numOfTable = numOfTable;
+        this.isPlug = isPlug;
+        this.location = location;
+    }
+    public String getToken() {
+        return token;
+    }
+
+    public int getNumOfTable() {
+        return numOfTable;
+    }
+
+    public boolean isPlug() {
+        return isPlug;
+    }
+
+    public String getLocation() {
+        return location;
     }
 }

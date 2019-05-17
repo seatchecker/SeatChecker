@@ -47,6 +47,7 @@ class DBController  {
     private String inputPassword;
     static final int MODE_MOVE_TABLE = 2;
     static final int MODE_CHECK_TABLE = 1;
+    static final int MODE_CHANGE_STATUS = 3;
 
 
     View view;
@@ -97,6 +98,7 @@ class DBController  {
 
     void getTableInfo(final Cafe cafe,final int mode){
         final ProgressDialog progressDialog = new ProgressDialog(view.getContext());
+        progressDialog.setMessage("좌석 정보를 가져오는 중입니다...");
         progressDialog.show();
 
         final FirebaseStorage fs = FirebaseStorage.getInstance();
@@ -112,7 +114,7 @@ class DBController  {
                     List<TableInfo> types = queryDocumentSnapshots.toObjects(TableInfo.class);
                     tables.addAll(types);
                     Log.d(TAG, "onSuccess: " + cafes);
-                    progressDialog.dismiss();
+
 
                     switch(mode){
                         case MODE_MOVE_TABLE :
@@ -121,15 +123,14 @@ class DBController  {
                             intent.putExtra("TABLE",tables);
                             view.getContext().startActivity(intent);
                             break;
+                        case MODE_CHANGE_STATUS :
+                            getSeatStatus(cafe,MODE_CHANGE_STATUS);
+                            break;
                         case MODE_CHECK_TABLE :
-
-                            Intent check_table_intent = new Intent(view.getContext(),SeatCheckActivity.class);
-                            check_table_intent.putExtra("CAFE",cafe);
-                            check_table_intent.putExtra("TABLE",tables);
-                            view.getContext().startActivity(check_table_intent);
+                            getSeatStatus(cafe,MODE_CHECK_TABLE);
                             break;
                     }
-
+                    progressDialog.dismiss();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -163,21 +164,43 @@ class DBController  {
         Toast.makeText(view.getContext(), "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();
     }
 
-    void getSeatStatus(Cafe cafe){
+    void getSeatStatus(final Cafe cafe,final int mode){
+
+        final ProgressDialog progressDialog = new ProgressDialog(view.getContext());
+        progressDialog.setMessage("좌석 상태 정보를 가져오는 중입니다...");
+        progressDialog.show();
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(cafe.getDid());
 
-        Query tableInformation = reference.orderByValue();
        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+
            @Override
            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
               for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                   SeatStatus seat = snapshot.getValue(SeatStatus.class);
+                  String key = snapshot.getKey();
                   assert seat != null;
-                  seat.setName(snapshot.getKey());
+                  for(TableInfo table : tables){
+                      if(table.getTableName().equals(key)){
+                          table.setTag( seat.getTag());
+                          break;
+                      }
+                  }
+              }
+               Intent myIntent = null;
+              if(mode == MODE_CHECK_TABLE){
+                  myIntent = new Intent(view.getContext(),SeatCheckActivity.class);
+              }else if(mode == MODE_CHANGE_STATUS){
+                  myIntent = new Intent(view.getContext(),ChangeStatusActivity.class);
+              }
+              if(myIntent != null){
+                  myIntent.putExtra("CAFE",cafe);
+                  myIntent.putExtra("TABLE",tables);
+                  view.getContext().startActivity(myIntent);
               }
 
 
-              SeatStatus status = dataSnapshot.getValue(SeatStatus.class);
+              progressDialog.dismiss();
            }
 
            @Override

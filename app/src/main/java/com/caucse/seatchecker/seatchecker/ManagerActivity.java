@@ -41,7 +41,8 @@ public class ManagerActivity extends AppCompatActivity {
         ivChangeStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo: changeStatus
+                DBController dbController = new DBController(v);
+                dbController.getTableInfo(cafe,DBController.MODE_CHANGE_STATUS);
             }
         });
 

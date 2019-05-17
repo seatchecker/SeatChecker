@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChangeStatusActivity"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tvNameOfCafe"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingStart="10sp"
+        android:layout_weight="1"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:gravity="center_vertical"/>
+
+    <TextView
+        android:text="클릭하여 좌석의 상태를 변환해 주세요!"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:layout_margin="10dp"
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:layout_gravity="center"
+        android:foregroundGravity="center"
+        android:overScrollMode="never"
+        ></android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/btnSaveChange"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorPrimaryDark"
+        android:layout_margin="5dp"
+        android:textColor="@color/white"
+        android:text="변경사항 저장하기"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+</LinearLayout>

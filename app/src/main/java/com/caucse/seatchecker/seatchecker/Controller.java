@@ -1,8 +1,17 @@
 package com.caucse.seatchecker.seatchecker;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,15 +58,34 @@ class Controller {
             if(table.getCapacity() == 1){
                 int first = Integer.parseInt(table.getPosition().get("first").toString());
                 arrays.get(first).setInformation(TableInfo.ONETABLE,table.isPlug(),table.getTableName(),table.getOrientation());
+                if(!table.getTag().equals("empty")){
+                    arrays.get(first).changeStatusOfSeat(false);
+                }else{
+                    arrays.get(first).changeStatusOfSeat(true);
+                }
             }else if(table.getCapacity() == 2){
                 int first = Integer.parseInt(table.getPosition().get("first").toString());
                 arrays.get(first).setInformation(TableInfo.TWOTABLE,table.isPlug(),table.getTableName(),table.getOrientation());
+                if(!table.getTag().equals("empty")){
+                    arrays.get(first).changeStatusOfSeat(false);
+                }else{
+                    arrays.get(first).changeStatusOfSeat(true);
+                }
             }
             else{
                 int first = Integer.parseInt(table.getPosition().get("first").toString());
                 int second = Integer.parseInt(table.getPosition().get("second").toString());
                 arrays.get(first).setInformation(TableInfo.FOURTABLE,table.isPlug(),table.getTableName(),table.getOrientation());
                 arrays.get(second).setInformation(TableInfo.FOURTABLE,table.isPlug(),table.getTableName(),table.getOrientation());
+
+                if(!table.getTag().equals("empty")){
+                    arrays.get(first).changeStatusOfSeat(false);
+                    arrays.get(second).changeStatusOfSeat(false);
+                }else{
+                    arrays.get(first).changeStatusOfSeat(true);
+                    arrays.get(second).changeStatusOfSeat(true);
+                }
+
             }
         }
         int counterFirst = Integer.parseInt(cafe.getCounter().get("first").toString());
@@ -146,6 +174,24 @@ class Controller {
         viewer.TablePlugGridViewer(listener,arrays,width,length);
     }
 
+    void setPlugInformation(ArrayList<TableInfo> tables){
+        for(TableInfo table : tables){
+            int first = Integer.parseInt(table.getPosition().get("first").toString());
+            int second = Integer.parseInt(table.getPosition().get("second").toString());
+
+            if(table.isPlug()){
+                arrays.get(first).setName("P");
+                if(second != -1){
+                    arrays.get(second).setName("P");
+                }
+            }else{
+                arrays.get(first).setName("");
+                if(second != -1){
+                    arrays.get(second).setName("");
+                }
+            }
+        }
+    }
     int addOneTable(int position){
         if(arrays.get(position).getStatus() != TableInfo.NONE){
             return -1;
@@ -385,6 +431,59 @@ class Controller {
         return false;
     }
 
+
+    void updateStatusOfSeats(int pos1, int pos2, boolean isEmptySeat){
+        arrays.get(pos1).changeStatusOfSeat(isEmptySeat);
+        viewer.updateGrid(pos1);
+        if(pos2 != -1){
+            arrays.get(pos2).changeStatusOfSeat(isEmptySeat);
+            viewer.updateGrid(pos2);
+        }
+    }
+
+    synchronized void inverseStatus(int pos1, int pos2){
+        boolean current = arrays.get(pos1).isEmptySeat();
+        arrays.get(pos1).changeStatusOfSeat(!current);
+        viewer.updateGrid(pos1);
+        if(pos2 != -1){
+            arrays.get(pos2).changeStatusOfSeat(!current);
+            viewer.updateGrid(pos2);
+        }
+
+    }
+
+    void SaveChangedStatusToDB(ArrayList<TableInfo> tables){
+
+        final ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("변경사항을 저장중입니다... 잠시 기다려주세요");
+        progressDialog.show();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(cafe.getDid());
+        for(TableInfo table : tables){
+            int first = Integer.parseInt(table.getPosition().get("first").toString());
+
+            boolean tableIsEmpty;
+            if(table.getTag().equals("empty")){
+                tableIsEmpty = true;
+            }else{
+                tableIsEmpty = false;
+            }
+
+            //if data was changed,
+            if(arrays.get(first).isEmptySeat() != tableIsEmpty){
+                if(arrays.get(first).isEmptySeat()){
+                    reference.child(table.getTableName()).child("tag").setValue("empty");
+                }else{
+                    reference.child(table.getTableName()).child("tag").setValue("USEDTABLE");
+                }
+
+            }
+
+        }
+
+        progressDialog.dismiss();
+        Toast.makeText(context, "변경사항이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+        ((Activity)context).finish();
+    }
 }
 
 

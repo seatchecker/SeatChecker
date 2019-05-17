@@ -92,8 +92,9 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
                 }
                 break;
             case TableInfo.FOURTABLE:
-                if(arrays.get(position-1).getStatus() == TableInfo.FOURTABLE
-                        ||arrays.get(position+1).getStatus() == TableInfo.FOURTABLE){
+
+                if((( position -1 >= 0 ) && arrays.get(position-1).getStatus() == TableInfo.FOURTABLE)
+                        || ((position+1 < arrays.size()) && arrays.get(position+1).getStatus() == TableInfo.FOURTABLE)){
                     holder.tvPlug.setBackground(context.getResources().getDrawable(R.drawable.above4));
                 }else{
                     holder.tvPlug.setBackground(context.getResources().getDrawable(R.drawable.right4));
@@ -112,7 +113,11 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
         }
         holder.tvPlug.setText(arrays.get(position).getName());
         if(!arrays.get(position).isEmptySeat()){
+            holder.ivStatus.setAlpha(0);
             holder.ivStatus.setBackground(context.getResources().getDrawable(R.drawable.cancel_image));
+        }else{
+            holder.ivStatus.setBackground(null);
+
         }
     }
 

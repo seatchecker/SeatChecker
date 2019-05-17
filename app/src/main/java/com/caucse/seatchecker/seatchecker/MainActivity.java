@@ -1,14 +1,19 @@
 package com.caucse.seatchecker.seatchecker;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +29,18 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent intent = new Intent(this,FirebaseInstanceIDService.class);
+        startService(intent);
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        String androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("ediya").child("push").child(androidId);
+
+        pushInformation my =new pushInformation(FirebaseInstanceId.getInstance().getToken(),0,false,"");
+        new pushInformation(FirebaseInstanceId.getInstance().getToken(),0,false,"");
+        reference.setValue(my);
+        Log.d("SHOWMETHETOKEN", "token "+ FirebaseInstanceId.getInstance().getToken());
         // Initializing the TabLayout
         tabLayout =  findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("카페 검색하기"));

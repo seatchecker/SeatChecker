@@ -114,8 +114,7 @@ public class CafeInfoActivity extends AppCompatActivity implements OnMapReadyCal
         googleMap.addMarker(markerOptions);
 
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(CAFE));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(18));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(CAFE,15));
 
     }
 }
