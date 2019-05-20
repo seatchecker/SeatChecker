@@ -38,8 +38,6 @@ public class CafeListAdapter extends RecyclerView.Adapter<CafeListAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-
-
         LayoutInflater layoutInflater = LayoutInflater.from(context);
 
         View cafeView = layoutInflater.inflate(R.layout.cafelist_item, parent, false);

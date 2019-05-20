@@ -33,29 +33,33 @@ public class SeatCheckActivity extends AppCompatActivity implements GridAdapter.
         final View view = getLayoutInflater().from(this).inflate(R.layout.activity_seat_check, null);
         setContentView(view);
 
+        final String androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
         Intent intent = getIntent();
         final Cafe cafe = (Cafe) intent.getSerializableExtra("CAFE");
         tableInfoList = (ArrayList<TableInfo>) intent.getSerializableExtra("TABLE");
         //get information of tables
 
+
         btnAlarmSet = findViewById(R.id.btnSetAlarm);
         ivCafeName = findViewById(R.id.tvNameOfCafe);
         ivCafeName.setText(cafe.getName());
 
+        DBController dbController = new DBController(btnAlarmSet.getRootView());
+        dbController.isThisCafeSetAlarm(cafe.getDid(),androidId,btnAlarmSet);
         controller = new Controller(this, cafe);
         controller.initTableGridView(this, tableInfoList);
         controller.setPlugInformation(tableInfoList);
 
+        //todo : get ralm data . if alarm was set, then change th btnAlarmSet to alarm_on.jpg
 
         btnAlarmSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String tag = (String)btnAlarmSet.getTag();
                 if(tag.equals("alarm_off.jpg")){
-                    String androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
                     CustomDialog alarmdialog = new CustomDialog(v);
-                    alarmdialog.callAlarmSettingDialog(cafe, androidId,btnAlarmSet);
-                    return;
+                    alarmdialog.callAlarmSettingDialog(cafe, androidId, btnAlarmSet);
                 }else{
                     btnAlarmSet.setBackground(view.getResources().getDrawable(R.drawable.alarm_off));
                     btnAlarmSet.setTag("alarm_off.jpg");
@@ -87,12 +91,13 @@ public class SeatCheckActivity extends AppCompatActivity implements GridAdapter.
                         int pos2 = Integer.parseInt(tableInfo.getPosition().get("second").toString());
 
                         SeatStatus seat = dataSnapshot.getValue(SeatStatus.class);
+                        assert seat != null;
                         if (seat.getTag().equals("empty")) {
                             controller.updateStatusOfSeats(pos1, pos2, true);
                         } else {
                             controller.updateStatusOfSeats(pos1, pos2, false);
                         }
-                        ;
+
                         break;
                     }
                 }

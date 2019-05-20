@@ -76,14 +76,16 @@ class Controller {
                 int first = Integer.parseInt(table.getPosition().get("first").toString());
                 int second = Integer.parseInt(table.getPosition().get("second").toString());
                 arrays.get(first).setInformation(TableInfo.FOURTABLE,table.isPlug(),table.getTableName(),table.getOrientation());
-                arrays.get(second).setInformation(TableInfo.FOURTABLE,table.isPlug(),table.getTableName(),table.getOrientation());
+                arrays.get(second).setInformation(TableInfo.FOURTABLE, table.isPlug(), table.getTableName(), table.getOrientation());
 
                 if(!table.getTag().equals("empty")){
                     arrays.get(first).changeStatusOfSeat(false);
                     arrays.get(second).changeStatusOfSeat(false);
+
                 }else{
                     arrays.get(first).changeStatusOfSeat(true);
                     arrays.get(second).changeStatusOfSeat(true);
+
                 }
 
             }
@@ -462,11 +464,8 @@ class Controller {
             int first = Integer.parseInt(table.getPosition().get("first").toString());
 
             boolean tableIsEmpty;
-            if(table.getTag().equals("empty")){
-                tableIsEmpty = true;
-            }else{
-                tableIsEmpty = false;
-            }
+            tableIsEmpty = table.getTag().equals("empty");
+
             //if data was changed,
             if(arrays.get(first).isEmptySeat() != tableIsEmpty){
                 if(arrays.get(first).isEmptySeat()){

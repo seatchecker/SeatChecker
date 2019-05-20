@@ -52,7 +52,7 @@ class CustomDialog {
             @Override
             public void onClick(View v) {
                 int tablenum = 0;
-                boolean isplug = false;
+                boolean isplug;
                 DBController dbController = new DBController(btnOK.getRootView());
                 int radioButtonID = rbTable.getCheckedRadioButtonId();
                 View rbButton = rbTable.findViewById(radioButtonID);
@@ -68,12 +68,9 @@ class CustomDialog {
                         break;
                 }
 
-                if(cbPlug.isChecked()){
-                    isplug = true;
-                }else{
-                    isplug = false;
-                }
-                dbController.addAlarmSetting(cafe.getDid(), androidId, tablenum, isplug);
+                isplug = cbPlug.isChecked();
+
+                dbController.addAlarmSetting(cafe.getDid(), cafe.getLocation(),androidId, tablenum, isplug);
                 button.setBackground(v.getResources().getDrawable(R.drawable.alarm_on));
                 button.setTag("alarm_on.jpg");
                 dialog.dismiss();

@@ -21,7 +21,7 @@ public class TableInfo implements Serializable {
     private int capacity = 0;
     private String orientation = "";
     private boolean isEmptySeat;
-    private String tag = "";
+    private String tag;
 
 
 
@@ -146,7 +146,7 @@ class SeatStatus{
         return tableno;
     }
 
-    public String getTag() {
+    String getTag() {
         return tag;
     }
     public void setName(String seatName){
@@ -156,10 +156,11 @@ class SeatStatus{
 
 @IgnoreExtraProperties
 class pushInformation{
-    String token = "";
-    int numOfTable = 0;
-    boolean isPlug = false;
+    private String token = "";
+    private int numOfTable = 0;
+    private boolean isPlug = false;
 
+    public pushInformation(){}
     pushInformation(String token, int numOfTable, boolean isPlug){
         this.token = token;
         this.numOfTable = numOfTable;
@@ -169,12 +170,20 @@ class pushInformation{
         return token;
     }
 
-    public int getNumOfTable() {
+    int getNumOfTable() {
         return numOfTable;
     }
 
     public boolean isPlug() {
         return isPlug;
     }
+
+}
+
+class AlarmListElement{
+    String cafeName = "";
+    int numOfTable = 0;
+    boolean isPlug;
+
 
 }
