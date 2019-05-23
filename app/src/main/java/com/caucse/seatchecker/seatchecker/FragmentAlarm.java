@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class FragmentAlarm extends Fragment {
 
     private View view;
-    private ArrayList<AlarmListElement> array;
+    private ArrayList<AlarmRealm> array;
     private String androidId;
     @Nullable
     @Override
@@ -23,8 +23,12 @@ public class FragmentAlarm extends Fragment {
         androidId = "" + android.provider.Settings.Secure.getString(view.getContext().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
         array = new ArrayList<>();
 
+
+        Viewer alarmView = new Viewer(view);
+        alarmView.AlarmListViewer(array);
+
         DBController dbController = new DBController(view);
-        dbController.getAlarmList(androidId);
+        dbController.getAlarmList(alarmView);
 
         return view;
     }
@@ -32,7 +36,6 @@ public class FragmentAlarm extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        DBController dbController = new DBController(view);
-        dbController.getAlarmList(androidId);
+
     }
 }

@@ -64,8 +64,7 @@ public class SeatCheckActivity extends AppCompatActivity implements GridAdapter.
                     btnAlarmSet.setBackground(view.getResources().getDrawable(R.drawable.alarm_off));
                     btnAlarmSet.setTag("alarm_off.jpg");
                     DBController dbController = new DBController(v);
-                    String androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-                    dbController.removeAlarmSetting(cafe.getDid(),androidId);
+                    dbController.removeAlarmSetting(cafe.getDid());
                     Toast.makeText(SeatCheckActivity.this, "알림을 해제하였습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -73,7 +72,7 @@ public class SeatCheckActivity extends AppCompatActivity implements GridAdapter.
 
         //get data from firebase(real time)
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        final DatabaseReference firebaseReference = firebaseDatabase.getReference().child(cafe.getDid());
+        final DatabaseReference firebaseReference = firebaseDatabase.getReference().child(cafe.getDid()).child("tableList");
 
 
         firebaseReference.addChildEventListener(new ChildEventListener() {

@@ -7,15 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -30,6 +24,7 @@ class Viewer {
     private GridAdapter adapter;
     private int startPoint = -1;
     private ItemTouchHelper itemTouchHelper;
+    private ArrayList<AlarmRealm> alarmList;
 
     Viewer(View view){
         this.view = view;
@@ -50,36 +45,20 @@ class Viewer {
 
 
     void AlarmListViewer(final ArrayList<AlarmRealm> alarms){
-        alarmListAdapter = new AlarmListAdapter(alarms, view.getContext());
+        alarmList = new ArrayList<>();
+        alarmList.addAll(alarms);
+        alarmListAdapter = new AlarmListAdapter(alarmList, view.getContext());
         final RecyclerView recyclerView = view.findViewById(R.id.alarmListRecyclerVIew);
         recyclerView.setAdapter(alarmListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public synchronized void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                final int position  = viewHolder.getAdapterPosition();
-                AlarmRealm alarm = alarms.get(position);
-                final String alarmDid = alarm.getCafeDid();
-                final String deviceID = "" + android.provider.Settings.Secure.getString(view.getContext().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-                FirebaseDatabase.getInstance().getReference().child(alarmDid).child("push").child(deviceID).removeValue();
-                Toast.makeText(context, alarm.getCafeName()+"의 알림이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                alarms.remove(position);
-                recyclerView.getAdapter().notifyItemChanged(position);
-
-            }
-        });
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(alarmListAdapter));
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
     }
 
-    void updateAlarmList(){
-        alarmListAdapter.notifyDataSetChanged();
+    void addAlarm(AlarmRealm alarm){
+        alarmListAdapter.addItem(alarm);
     }
 
     void TableGridViewer(final GridAdapter.GridItemListener listener, ArrayList<GridElement> arrays, int width, int length){

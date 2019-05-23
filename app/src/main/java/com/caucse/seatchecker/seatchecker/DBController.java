@@ -51,7 +51,6 @@ class DBController {
 
     private ArrayList<Cafe> cafes;
     private ArrayList<TableInfo> tables;
-    private Viewer alarmView;
     static final int MODE_MOVE_TABLE = 2;
     static final int MODE_CHECK_TABLE = 1;
     static final int MODE_CHANGE_STATUS = 3;
@@ -216,12 +215,14 @@ class DBController {
         });
     }
 
-    void removeAlarmSetting(final String cafeName, final String deviceID) {
-        FirebaseDatabase.getInstance().getReference().child(cafeName).child("push").child(deviceID).removeValue();
+    void removeAlarmSetting(final String cafeName) {
+        String device  = MainActivity.androidID;
+        FirebaseDatabase.getInstance().getReference().child(cafeName).child("push").child(device).removeValue();
     }
 
     void addAlarmSetting(String cafeName, String location, String deviceID, int tableNum, boolean isplug) {
-        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(cafeName).child("push").child(deviceID);
+        final DatabaseReference reference = FirebaseDatabase.getInstance()
+                .getReference().child(cafeName).child("push").child(deviceID);
         pushInformation my = new pushInformation(FirebaseInstanceId.getInstance().getToken(), tableNum, isplug);
         reference.setValue(my);
     }
@@ -250,13 +251,12 @@ class DBController {
     }
 
 
-    void getAlarmList(final String androidID) {
+    void getAlarmList(final Viewer alarmView) {
         final ProgressDialog progressDialog = new ProgressDialog(view.getContext());
         alarmList = new ArrayList<>();
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        final String androidID = MainActivity.androidID;
 
-        alarmView = new Viewer(view);
-        alarmView.AlarmListViewer(alarmList);
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -269,12 +269,9 @@ class DBController {
 
                         assert curPush != null;
                         AlarmRealm curalarm = new AlarmRealm(cafeDid, cafeName,curPush.getNumOfTable(), curPush.isPlug());
-                        alarmList.add(curalarm);
-                        alarmView.updateAlarmList();
-
+                        alarmView.addAlarm(curalarm);
                     }
                 }
-                progressDialog.dismiss();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

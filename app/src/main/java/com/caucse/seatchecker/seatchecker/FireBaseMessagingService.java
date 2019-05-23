@@ -25,13 +25,8 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
         refreshedToken = FirebaseInstanceId.getInstance().getInstanceId().getResult().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
 
-
     }
-    /**
-     * Called when message is received.
-     *
-     * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
-     */
+
     // [START receive_message]
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -87,7 +82,7 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("FCM Message")
+                        .setContentTitle("SeatChecker")
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)

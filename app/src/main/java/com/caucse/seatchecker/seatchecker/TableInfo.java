@@ -158,13 +158,13 @@ class SeatStatus{
 class pushInformation{
     private String token = "";
     private int numOfTable = 0;
-    private boolean isPlug = false;
+    private boolean plug = false;
 
     public pushInformation(){}
     pushInformation(String token, int numOfTable, boolean isPlug){
         this.token = token;
         this.numOfTable = numOfTable;
-        this.isPlug = isPlug;
+        this.plug = isPlug;
     }
     public String getToken() {
         return token;
@@ -175,7 +175,7 @@ class pushInformation{
     }
 
     public boolean isPlug() {
-        return isPlug;
+        return plug;
     }
 
 }

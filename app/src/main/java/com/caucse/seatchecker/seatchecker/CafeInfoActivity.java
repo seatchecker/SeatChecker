@@ -105,11 +105,14 @@ public class CafeInfoActivity extends AppCompatActivity implements OnMapReadyCal
         }
         assert addressList != null;
         String []splitStr = addressList.get(0).toString().split(",");
+        Double latitue = addressList.get(0).getLatitude();
+        Double longitude = addressList.get(0).getLongitude();
 
-        String latitude = splitStr[10].substring(splitStr[10].indexOf("=")+1);
-        String longitude = splitStr[12].substring(splitStr[12].indexOf("=")+1);
+        //String latitude = splitStr[10].substring(splitStr[10].indexOf("=")+1);
+        //String longitude = splitStr[12].substring(splitStr[12].indexOf("=")+1);
 
-        LatLng CAFE = new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude));
+        //LatLng CAFE = new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude));
+        LatLng CAFE = new LatLng(latitue,longitude);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(CAFE);
         markerOptions.title(curCafe.getName());

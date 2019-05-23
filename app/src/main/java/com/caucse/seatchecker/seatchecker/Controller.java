@@ -459,7 +459,7 @@ class Controller {
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("변경사항을 저장중입니다... 잠시 기다려주세요");
         progressDialog.show();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(cafe.getDid());
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(cafe.getDid()).child("tableList");
         for(TableInfo table : tables){
             int first = Integer.parseInt(table.getPosition().get("first").toString());
 
