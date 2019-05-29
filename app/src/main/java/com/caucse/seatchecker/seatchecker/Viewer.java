@@ -20,11 +20,9 @@ class Viewer {
     private Context context;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
-    private AlarmListAdapter alarmListAdapter;
     private GridAdapter adapter;
     private int startPoint = -1;
-    private ItemTouchHelper itemTouchHelper;
-    private ArrayList<AlarmRealm> alarmList;
+    private CafeListAdapter recyclerDataAdapter;
 
     Viewer(View view){
         this.view = view;
@@ -37,34 +35,21 @@ class Viewer {
     }
 
     void CafeListViewer(ArrayList<Cafe> cafes){
-        CafeListAdapter recyclerDataAdapter = new CafeListAdapter(cafes, view.getContext());
+        recyclerDataAdapter = new CafeListAdapter(cafes, view.getContext());
         RecyclerView recyclerView = view.findViewById(R.id.cafeList_recyclerView);
         recyclerView.setAdapter(recyclerDataAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
     }
-
-
-    void AlarmListViewer(final ArrayList<AlarmRealm> alarms){
-        alarmList = new ArrayList<>();
-        alarmList.addAll(alarms);
-        alarmListAdapter = new AlarmListAdapter(alarmList, view.getContext());
-        final RecyclerView recyclerView = view.findViewById(R.id.alarmListRecyclerVIew);
-        recyclerView.setAdapter(alarmListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(alarmListAdapter));
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-
+    void updateCafeList(){
+        this.recyclerDataAdapter.notifyDataSetChanged();
     }
 
-    void addAlarm(AlarmRealm alarm){
-        alarmListAdapter.addItem(alarm);
-    }
 
-    void TableGridViewer(final GridAdapter.GridItemListener listener, ArrayList<GridElement> arrays, int width, int length){
+
+    void TableGridViewer(final GridAdapter.GridItemListener listener, ArrayList<GridElement> arrays, int width, int length, int mode){
         layoutManager = new GridLayoutManager(context, width);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new GridAdapter(context, arrays ,listener,width,length);
+        adapter = new GridAdapter(context, arrays ,listener,width,length,mode);
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -121,11 +106,11 @@ class Viewer {
     }
 
 
-    void TablePlugGridViewer(final GridAdapter.GridItemListener listener, ArrayList<GridElement> arrays, int width, int length){
+    void TablePlugGridViewer(final GridAdapter.GridItemListener listener, ArrayList<GridElement> arrays, int width, int length, int mode){
         recyclerView = ((Activity)context).getWindow().getDecorView().findViewById(R.id.plugRecyclerView);
         layoutManager = new GridLayoutManager(context, width);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new GridAdapter(context, arrays ,listener,width,length);
+        adapter = new GridAdapter(context, arrays ,listener,width,length, mode);
         recyclerView.setAdapter(adapter);
     }
     void updateGrid(int position){

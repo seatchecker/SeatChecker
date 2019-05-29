@@ -2,6 +2,8 @@ package com.caucse.seatchecker.seatchecker;
 
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     protected static String androidID ;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private boolean isInitial = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +37,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Initializing the TabLayout
         tabLayout =  findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("카페 검색하기"));
-        tabLayout.addTab(tabLayout.newTab().setText("알림설정"));
+        TabLayout.Tab cafeTab = tabLayout.newTab().setText("카페 검색하기");
+        TabLayout.Tab alarmTab = tabLayout.newTab().setText("알림설정");
+        alarmTab.setTag("alarm");
+        tabLayout.addTab(cafeTab);
+        tabLayout.addTab(alarmTab);
+
+        //tabLayout.addTab(tabLayout.newTab().setText("카페 검색하기"));
+        //tabLayout.addTab(tabLayout.newTab().setText("알림설정"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         // Initializing ViewPager
@@ -44,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
         TabPagerAdapter pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+
+
+
 
         // Set TabSelectedListener
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

@@ -34,7 +34,7 @@ public class ChangeStatusActivity extends AppCompatActivity implements GridAdapt
         ivCafeName.setText(cafe.getName());
 
         controller = new Controller(this, cafe);
-        controller.initTableGridView(this, tableInfoList);
+        controller.initTableGridView(this, tableInfoList,GridAdapter.MODE_CHANGE);
 
 
         btnSaveChange.setOnClickListener(new View.OnClickListener() {

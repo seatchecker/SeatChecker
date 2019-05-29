@@ -38,7 +38,7 @@ public class MoveTableLocationActivity extends AppCompatActivity implements Grid
 
 
         controller = new Controller(this,cafe);
-        controller.initTableGridView(this,tables);
+        controller.initTableGridView(this,tables,GridAdapter.MODE_CHANGE);
 
         btnNextPage.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -3,6 +3,7 @@ package com.caucse.seatchecker.seatchecker;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -13,11 +14,14 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 
@@ -38,22 +42,29 @@ public class AlarmListAdapter  extends RecyclerView.Adapter<AlarmListAdapter.Vie
             int pos = list.size();
             list.add(alarm);
             notifyItemInserted(pos);
+            final DatabaseReference reference = FirebaseDatabase.getInstance()
+                    .getReference().child(alarm.getCafeDid()).child("push").child(MainActivity.androidID);
+            pushInformation my = new pushInformation(FirebaseInstanceId.getInstance().getToken(), alarm.getTableNum(), alarm.isPlug());
+            reference.setValue(my);
         }
     }
 
-    public synchronized void deleteItem(int position){
+    synchronized void deleteItem(int position){
         synchronized (this){
             deleteAlarm = list.get(position);
             deletePosition = position;
+            //remove data from db
+
+            FirebaseDatabase.getInstance().getReference().child(deleteAlarm.getCafeDid()).child("push").child(MainActivity.androidID).removeValue();
             list.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(0,list.size());
-            //showUndoSnackBar();
+            showUndoSnackBar();
         }
 
     }
 
-    public void showUndoSnackBar(){
+    private void showUndoSnackBar(){
         View view = ((Activity)context).getWindow().getDecorView().findViewById(R.id.alarmListRecyclerVIew);
         Snackbar snackbar = Snackbar.make(view, "알림을 해제하셨습니다.",Snackbar.LENGTH_LONG);
         snackbar.setAction("실행취소", new View.OnClickListener() {
@@ -61,6 +72,7 @@ public class AlarmListAdapter  extends RecyclerView.Adapter<AlarmListAdapter.Vie
             public void onClick(View v) {
                 list.add(deletePosition,deleteAlarm);
                 notifyItemInserted(deletePosition);
+
             }
         });
         snackbar.show();

@@ -20,14 +20,17 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
     private static GridItemListener listener;
     private int width;
     private int length;
+    protected static final int MODE_CHANGE = 300;
+    protected static final int MODE_CHECK = 400;
+    private int GridMode;
 
-
-    GridAdapter(Context context, ArrayList<GridElement> arrays, GridItemListener listener, int width, int length){
+    GridAdapter(Context context, ArrayList<GridElement> arrays, GridItemListener listener, int width, int length, int mode){
         this.context = context;
         this.arrays = arrays;
         GridAdapter.listener = listener;
         this.width = width;
         this.length = length;
+        GridMode = mode;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -109,7 +112,10 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
                 break;
             case TableInfo.NONE :
                 holder.layout.setBackgroundColor(context.getResources().getColor(R.color.white));
-                holder.tvPlug.setBackgroundResource(R.color.emptyTable);
+                holder.layout.setBackground(null);
+
+
+
         }
         holder.tvPlug.setText(arrays.get(position).getName());
         if(!arrays.get(position).isEmptySeat()){

@@ -27,7 +27,7 @@ public class SetPlugActivity extends AppCompatActivity implements GridAdapter.Gr
         tables = (ArrayList<TableInfo>)intent.getSerializableExtra("TABLES");
 
         controller = new Controller(this, cafe);
-        controller.initTablePlugView(this,tables);
+        controller.initTablePlugView(this,tables,GridAdapter.MODE_CHANGE);
 
         btnSaveChange.setOnClickListener(new View.OnClickListener() {
             @Override

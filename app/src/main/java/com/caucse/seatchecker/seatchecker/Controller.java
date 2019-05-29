@@ -40,7 +40,7 @@ class Controller {
         this.cafe = cafe;
     }
 
-    void initTableGridView(GridAdapter.GridItemListener listener,ArrayList<TableInfo> tables){
+    void initTableGridView(GridAdapter.GridItemListener listener,ArrayList<TableInfo> tables,int mode){
 
         int width = Integer.parseInt(cafe.getGrid().get("width").toString());
         int length =  Integer.parseInt(cafe.getGrid().get("length").toString());
@@ -111,10 +111,10 @@ class Controller {
         }
 
         viewer = new Viewer(context);
-        viewer.TableGridViewer(listener,arrays,width,length);
+        viewer.TableGridViewer(listener,arrays,width,length,mode);
     }
 
-    void initTablePlugView(GridAdapter.GridItemListener listener,ArrayList<TableInfo> tables){
+    void initTablePlugView(GridAdapter.GridItemListener listener,ArrayList<TableInfo> tables,int mode){
 
         ResultTables = tables;
         int width = Integer.parseInt(cafe.getGrid().get("width").toString());
@@ -173,7 +173,7 @@ class Controller {
         }
 
         viewer = new Viewer(context);
-        viewer.TablePlugGridViewer(listener,arrays,width,length);
+        viewer.TablePlugGridViewer(listener,arrays,width,length,mode);
     }
 
     void setPlugInformation(ArrayList<TableInfo> tables){

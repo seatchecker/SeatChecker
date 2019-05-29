@@ -13,6 +13,7 @@
         android:background="@color/colorPrimary">
 
         <EditText
+            android:id="@+id/edtSearch"
             android:layout_width="300dp"
             android:layout_margin="5dp"
             android:layout_height="match_parent"

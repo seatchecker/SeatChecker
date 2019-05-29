@@ -47,7 +47,7 @@ public class SeatCheckActivity extends AppCompatActivity implements GridAdapter.
         DBController dbController = new DBController(btnAlarmSet.getRootView());
         dbController.isThisCafeSetAlarm(cafe.getDid(),androidId,btnAlarmSet);
         controller = new Controller(this, cafe);
-        controller.initTableGridView(this, tableInfoList);
+        controller.initTableGridView(this, tableInfoList,GridAdapter.MODE_CHECK);
         controller.setPlugInformation(tableInfoList);
 
         //todo : get ralm data . if alarm was set, then change th btnAlarmSet to alarm_on.jpg
@@ -117,38 +117,7 @@ public class SeatCheckActivity extends AppCompatActivity implements GridAdapter.
 
             }
         });
-        /*
 
-        firebaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Toast.makeText(SeatCheckActivity.this, "좌석변동발생!!!", Toast.LENGTH_SHORT).show();
-                for(TableInfo tableInfo : tableInfoList){
-                    String key = dataSnapshot.getKey();
-                    if(tableInfo.getTableName().equals(key)){
-                        int pos1 = Integer.parseInt(tableInfo.getPosition().get("first").toString());
-                        int pos2 = Integer.parseInt(tableInfo.getPosition().get("second").toString());
-
-                        SeatStatus seat = dataSnapshot.getValue(SeatStatus.class);
-                        if(seat.getTag().equals("empty")){
-                            controller.updateStatusOfSeats(pos1, pos2, true);
-                        }else{
-                            controller.updateStatusOfSeats(pos1,pos2,false);
-                        }
-;
-                        break;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-*/
     }
     @Override
     public void onItemClick(View view, int position) {

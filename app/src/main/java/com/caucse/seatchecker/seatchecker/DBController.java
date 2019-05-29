@@ -50,11 +50,14 @@ import static android.support.constraint.Constraints.TAG;
 class DBController {
 
     private ArrayList<Cafe> cafes;
+    private ArrayList<Cafe> originCafes;
     private ArrayList<TableInfo> tables;
     static final int MODE_MOVE_TABLE = 2;
     static final int MODE_CHECK_TABLE = 1;
     static final int MODE_CHANGE_STATUS = 3;
     private ArrayList<AlarmRealm> alarmList;
+    private static Viewer alarmview;
+    private static Viewer list;
 
     View view;
 
@@ -65,7 +68,25 @@ class DBController {
 
     }
 
+    void searchCafe(String text){
+        cafes.clear();
+
+        if(text.length() == 0){
+            cafes.addAll(originCafes);
+
+        }else{
+            for(int i = 0; i<originCafes.size(); i++){
+                Cafe curCafe = originCafes.get(i);
+                if(curCafe.getName().toLowerCase().contains(text) || curCafe.getLocation().toLowerCase().contains(text)){
+                    cafes.add(originCafes.get(i));
+                }
+            }
+        }
+        list.updateCafeList();
+
+    }
     void getCafeInfo() {
+        originCafes = new ArrayList<>();
         final ProgressDialog progressDialog = new ProgressDialog(view.getContext());
         progressDialog.setMessage("카페의 정보를 불러오는중입니다. 잠시만 기다려주세요");
         progressDialog.show();
@@ -83,10 +104,11 @@ class DBController {
                     Log.d(TAG, "onSuccess: LIST EMPTY");
                 } else {
                     List<Cafe> types = queryDocumentSnapshots.toObjects(Cafe.class);
+                    originCafes.addAll(types);
                     cafes.addAll(types);
                     Log.d(TAG, "onSuccess: " + cafes);
 
-                    Viewer list = new Viewer(view);
+                    list = new Viewer(view);
                     list.CafeListViewer(cafes);
 
                     progressDialog.dismiss();
@@ -218,6 +240,7 @@ class DBController {
     void removeAlarmSetting(final String cafeName) {
         String device  = MainActivity.androidID;
         FirebaseDatabase.getInstance().getReference().child(cafeName).child("push").child(device).removeValue();
+
     }
 
     void addAlarmSetting(String cafeName, String location, String deviceID, int tableNum, boolean isplug) {
@@ -243,36 +266,6 @@ class DBController {
                 }
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-    void getAlarmList(final Viewer alarmView) {
-        final ProgressDialog progressDialog = new ProgressDialog(view.getContext());
-        alarmList = new ArrayList<>();
-        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        final String androidID = MainActivity.androidID;
-
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.child("push").child(androidID).exists()) {
-                        final pushInformation curPush = snapshot.child("push").child(androidID).getValue(pushInformation.class);
-                        final String cafeDid = snapshot.getKey();
-                        String cafeName = (String)snapshot.child("cafeName").getValue();
-
-                        assert curPush != null;
-                        AlarmRealm curalarm = new AlarmRealm(cafeDid, cafeName,curPush.getNumOfTable(), curPush.isPlug());
-                        alarmView.addAlarm(curalarm);
-                    }
-                }
-            }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 

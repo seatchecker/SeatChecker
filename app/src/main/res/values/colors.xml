@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#7794F5</color>
-    <color name="colorPrimaryDark">#7794F5</color>
+    <color name="colorPrimary">#4ABAA4</color>
+    <color name="colorPrimaryDark">#4ABAA4</color>
     <color name="colorAccent">#D81B60</color>
     <color name="halftransparentWhite">#80FFFFFF</color>
     <color name="emptyPosition">#BCBBBB</color>
@@ -12,4 +12,5 @@
     <color name="oneTable">#DE1450</color>
     <color name="twoTable">#1B5C2D</color>
     <color name="fourTable">#202078</color>
+    <color name="icon_background">#4ABAA4</color>
 </resources>
