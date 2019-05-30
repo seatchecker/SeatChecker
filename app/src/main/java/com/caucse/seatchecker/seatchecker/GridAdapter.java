@@ -71,6 +71,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.tvPlug.setVisibility(View.VISIBLE);
         String str = arrays.get(position).getOrientation();
         switch(arrays.get(position).getStatus()){
             case TableInfo.COUNTER :
@@ -112,17 +113,15 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
                 break;
             case TableInfo.NONE :
                 holder.layout.setBackgroundColor(context.getResources().getColor(R.color.white));
-                holder.layout.setBackground(null);
-
-
+                holder.tvPlug.setBackground(context.getResources().getDrawable(R.drawable.empty_seat));
 
         }
         holder.tvPlug.setText(arrays.get(position).getName());
         if(!arrays.get(position).isEmptySeat()){
-            holder.ivStatus.setAlpha(0);
+            holder.ivStatus.setVisibility(View.VISIBLE);
             holder.ivStatus.setBackground(context.getResources().getDrawable(R.drawable.cancel_image));
         }else{
-            holder.ivStatus.setBackground(null);
+            holder.ivStatus.setVisibility(View.INVISIBLE);
 
         }
     }

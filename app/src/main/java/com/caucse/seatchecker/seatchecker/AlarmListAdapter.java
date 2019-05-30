@@ -25,6 +25,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 
+import static com.caucse.seatchecker.seatchecker.MainActivity.androidID;
+
 public class AlarmListAdapter  extends RecyclerView.Adapter<AlarmListAdapter.ViewHolder>{
 
     private int deletePosition;
@@ -43,7 +45,7 @@ public class AlarmListAdapter  extends RecyclerView.Adapter<AlarmListAdapter.Vie
             list.add(alarm);
             notifyItemInserted(pos);
             final DatabaseReference reference = FirebaseDatabase.getInstance()
-                    .getReference().child(alarm.getCafeDid()).child("push").child(MainActivity.androidID);
+                    .getReference().child(alarm.getCafeDid()).child("push").child(androidID);
             pushInformation my = new pushInformation(FirebaseInstanceId.getInstance().getToken(), alarm.getTableNum(), alarm.isPlug());
             reference.setValue(my);
         }
@@ -55,7 +57,7 @@ public class AlarmListAdapter  extends RecyclerView.Adapter<AlarmListAdapter.Vie
             deletePosition = position;
             //remove data from db
 
-            FirebaseDatabase.getInstance().getReference().child(deleteAlarm.getCafeDid()).child("push").child(MainActivity.androidID).removeValue();
+            FirebaseDatabase.getInstance().getReference().child(deleteAlarm.getCafeDid()).child("push").child(androidID).removeValue();
             list.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(0,list.size());
@@ -71,6 +73,11 @@ public class AlarmListAdapter  extends RecyclerView.Adapter<AlarmListAdapter.Vie
             @Override
             public void onClick(View v) {
                 list.add(deletePosition,deleteAlarm);
+
+                final DatabaseReference reference = FirebaseDatabase.getInstance()
+                        .getReference().child(deleteAlarm.getCafeDid()).child("push").child(androidID);
+                pushInformation my = new pushInformation(FirebaseInstanceId.getInstance().getToken(), deleteAlarm.getTableNum(), deleteAlarm.isPlug());
+                reference.setValue(my);
                 notifyItemInserted(deletePosition);
 
             }
